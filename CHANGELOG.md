@@ -117,6 +117,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Halaman utas menampilkan rantai induk di atas post, maksimal lima level.
 - Kotak balas di halaman utas tetap membalas post yang sama setelah kirim, tidak lagi berantai ke balasan pertama.
 - `Post::replies()` hanya mengembalikan balasan; kutipan tidak lagi muncul di daftar balasan halaman utas.
+- Halaman masuk dan daftar memakai tata letak dua kolom yang lazim di aplikasi besar: panel merek gelap dengan lambang dan satu kalimat penjelas di kiri, formulir berlabel 400px di kanan, tombol kirim selebar kolom. Panel merek disembunyikan di ponsel.
 
 ### Diperbaiki
 
@@ -125,3 +126,6 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Kata kunci baru di halaman pencarian mengembalikan hasil ke halaman pertama, tidak lagi bertahan di halaman lama.
 - Lampiran yang bukan gambar tidak lagi menggagalkan render kotak tulis; berkas semacam itu ditolak saat dipilih dengan pesan di bawah kotak tulis.
 - Gambar di atas 5 MB ditolak saat dipilih, bukan menunggu tombol Posting ditekan.
+- Jalur lambang X memakai bentuk resmi 24 piksel, sehingga sudut kiri bawah huruf X tidak lagi terpotong di sidebar dan nav ponsel.
+- `x-app-logo-icon` dihapus karena hanya dipakai kerangka auth lama dan isinya lambang Laravel, bukan lambang X.
+- `x-auth-header` kini rata kiri mengikuti formulir panel kanan, dan `x-auth-field` dihapus karena isian kembali memakai `flux:input` berlabel.

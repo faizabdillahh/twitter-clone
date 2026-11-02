@@ -13,9 +13,14 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered(): void
     {
+        // Halaman masuk bisa dibuka tanpa login.
         $response = $this->get('/login');
 
-        $response->assertStatus(200);
+        // Isian tetap terikat ke properti Livewire meski dirender komponen Blade.
+        $response->assertStatus(200)
+            ->assertSee('Masuk ke tweetUSK')
+            ->assertSee('wire:model="email"', false)
+            ->assertSee('wire:model="password"', false);
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

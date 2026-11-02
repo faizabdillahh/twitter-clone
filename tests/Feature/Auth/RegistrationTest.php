@@ -16,7 +16,11 @@ class RegistrationTest extends TestCase
         // Halaman pendaftaran bisa dibuka tanpa login.
         $response = $this->get('/register');
 
-        $response->assertStatus(200);
+        // Setiap isian terikat ke propertinya sendiri lewat komponen x-auth-field.
+        $response->assertStatus(200)
+            ->assertSee('Buat akun Anda')
+            ->assertSee('wire:model="username"', false)
+            ->assertSee('wire:model="password_confirmation"', false);
     }
 
     public function test_new_users_can_register(): void

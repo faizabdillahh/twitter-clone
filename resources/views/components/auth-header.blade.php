@@ -1,9 +1,13 @@
+{{-- Judul dan penjelasan di atas formulir halaman auth. --}}
 @props([
     'title',
     'description',
 ])
 
-<div class="flex w-full flex-col gap-2 text-center">
-    <h1 class="text-xl font-medium dark:text-zinc-200">{{ $title }}</h1>
-    <p class="text-center text-sm dark:text-zinc-400">{{ $description }}</p>
+{{-- Rata kiri agar sejalan dengan formulir di panel kanan. --}}
+<div class="flex w-full flex-col gap-1.5">
+    {{-- Judul halaman. --}}
+    <h1 class="text-[26px] font-extrabold tracking-tight text-[#0f1419] dark:text-[#e7e9ea]">{{ $title }}</h1>
+    {{-- Satu kalimat penjelas di bawah judul. --}}
+    <p class="text-[15px] text-zinc-500">{{ $description }}</p>
 </div>

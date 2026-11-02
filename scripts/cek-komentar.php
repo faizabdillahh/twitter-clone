@@ -35,17 +35,13 @@ $pragma = 'cek-komentar: abaikan';
 $warisan = [
     // Komponen bawaan; avatar.blade.php tidak didaftarkan karena kita yang menulisnya.
     'resources/views/components/action-message.blade.php',
-    'resources/views/components/app-logo-icon.blade.php',
-    'resources/views/components/auth-header.blade.php',
     'resources/views/components/auth-session-status.blade.php',
     'resources/views/components/text-link.blade.php',
-    // Layout auth masih bawaan; app.blade.php dan sidebar sudah milik kita.
-    'resources/views/components/layouts/auth',
+    // Pengaturan masih bawaan; layout auth dan halaman masuk sudah milik kita.
     'resources/views/components/settings/',
-    // Halaman auth bawaan; register.blade.php tetap diperiksa karena kita ubah.
+    // Halaman auth bawaan; register dan login sudah kita tulis ulang.
     'resources/views/livewire/auth/confirm-password.blade.php',
     'resources/views/livewire/auth/forgot-password.blade.php',
-    'resources/views/livewire/auth/login.blade.php',
     'resources/views/livewire/auth/reset-password.blade.php',
     'resources/views/livewire/auth/verify-email.blade.php',
     // Tab pengaturan lain masih apa adanya; profil sudah jadi milik kita.

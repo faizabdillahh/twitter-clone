@@ -1,8 +1,8 @@
 {{-- Keterangan halaman galat: kode besar, judul, satu kalimat penjelas, dan tautan pulang. --}}
 @props(['kode', 'judul', 'pesan'])
 
-{{-- Isi ditengahkan mengikuti tata letak halaman tamu. --}}
-<div class="text-center">
+{{-- Isi ditengahkan mendatar dan tegak di dalam kerangka halaman tamu. --}}
+<div class="flex flex-1 flex-col items-center justify-center text-center">
     {{-- Kode status sebagai angka besar bergaya X. --}}
     <p class="text-[64px] leading-none font-extrabold text-[#0f1419] dark:text-[#e7e9ea]">{{ $kode }}</p>
     {{-- Judul singkat yang menyebut masalahnya. --}}

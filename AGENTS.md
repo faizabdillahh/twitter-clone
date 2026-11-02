@@ -17,6 +17,7 @@ Sebuah perubahan dianggap selesai kalau tiga perintah pertama lulus tanpa galat.
 - Rute `/{user}` harus terdaftar paling akhir di `routes/web.php`, setelah `require auth.php`. Bila didahulukan, pola itu menelan `/login` dan `/register`. Nama parameternya `user` agar cocok dengan `mount(User $user)`; nama lain membuat Livewire menerima model kosong.
 - Halaman galat di `resources/views/errors/` memakai `x-layouts.auth`, bukan layout aplikasi. Sidebar membaca `auth()->user()`, jadi layout itu tidak boleh dipakai untuk tamu yang tersesat.
 - Aksi Livewire masuk lewat `/livewire/update`, bukan lewat rute halaman, sehingga `throttle:` pada rute tidak berlaku. Batas laju penulisan karena itu dipasang di dalam `Composer::kirim()` dengan `RateLimiter::attempt('tulis:'.Auth::id(), 30, ..., 60)`.
+- Halaman auth memakai `x-layouts.auth`: panel merek gelap di kiri dan formulir 400px di kanan. Panel merek disembunyikan di bawah `lg`, jadi lambang versi ponsel wajib tetap ada di panel formulir.
 - `posts.repost_key` diisi model saat event `saving`, bukan manual di komponen. Nilainya unik per pasangan pengguna dan post induk.
 - Relasi ke post induk selalu memakai `withTrashed()`. Tanpa itu balasan kehilangan konteks saat induknya dihapus. Setiap tempat yang menampilkan induk memeriksa `trashed()` lebih dulu agar isi post yang ditarik tidak bocor lewat balasan atau repost.
 - Batas 250 karakter memakai `grapheme_strlen()`, bukan `strlen()`, karena emoji dihitung satu karakter.

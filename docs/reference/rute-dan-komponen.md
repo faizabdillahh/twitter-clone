@@ -63,6 +63,10 @@ Rute `/{user}` didaftarkan **setelah** `require __DIR__.'/auth.php'`. Kalau dida
 
 `x-post-card` menerima tiga prop: `post` (model yang dirender), `status` (peta status dan hitungan dari `PostCardStatus`), dan `tampilkanInduk` (menampilkan baris "Membalas @user" pada kartu balasan). `x-empty-state` menerima `judul` dan `teks`. `x-error-page` menerima `kode`, `judul`, dan `pesan`.
 
+## Halaman auth
+
+Halaman auth memakai `x-layouts.auth`, yaitu kerangka dua kolom: panel merek gelap di kiri berisi lambang, nama aplikasi, dan satu kalimat penjelas; formulir di panel kanan selebar 400px. Panel merek hanya muncul mulai ukuran `lg`, jadi lambang versi ponsel disediakan di atas formulir. Isian memakai `flux:input` dengan label di atas, dan tombol kirim memakai `flux:button variant="primary"` selebar kolom. `x-auth-header` dipakai halaman lupa dan atur ulang sandi.
+
 ## Halaman galat
 
 `resources/views/errors/` berisi `403`, `404`, `419`, `429`, `500`, dan `503`. Laravel memilih berkas itu otomatis dari kode status, tanpa konfigurasi tambahan. Semuanya memakai `x-layouts.auth` karena layout aplikasi menuntut pengguna yang login, sedangkan halaman galat harus tetap terbaca oleh tamu.
