@@ -53,6 +53,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Tautan otomatis untuk sebutan `@username` di isi post.
 - Komponen `x-empty-state` sebagai keadaan kosong di beranda, utas, profil, pencarian, dan aktivitas.
 - Item Pengaturan di menu akun, karena halaman pengaturan sudah ada tetapi belum bisa dijangkau dari navigasi.
+- Halaman galat kustom di `resources/views/errors/` untuk 403, 404, 419, 429, 500, dan 503, memakai komponen `x-error-page` dan kerangka halaman tamu agar tetap terbaca tanpa login.
 
 ### Dihapus
 

@@ -59,8 +59,13 @@ Rute `/{user}` didaftarkan **setelah** `require __DIR__.'/auth.php'`. Kalau dida
 | `x-post-body` | Mengubah hashtag dan sebutan `@username` menjadi tautan |
 | `x-avatar` | Foto profil bulat atau inisial nama |
 | `x-empty-state` | Judul besar dan satu kalimat penjelas untuk daftar kosong |
+| `x-error-page` | Kode status besar, judul, penjelas, dan tautan kembali ke beranda untuk halaman galat |
 
-`x-post-card` menerima tiga prop: `post` (model yang dirender), `status` (peta status dan hitungan dari `PostCardStatus`), dan `tampilkanInduk` (menampilkan baris "Membalas @user" pada kartu balasan). `x-empty-state` menerima `judul` dan `teks`.
+`x-post-card` menerima tiga prop: `post` (model yang dirender), `status` (peta status dan hitungan dari `PostCardStatus`), dan `tampilkanInduk` (menampilkan baris "Membalas @user" pada kartu balasan). `x-empty-state` menerima `judul` dan `teks`. `x-error-page` menerima `kode`, `judul`, dan `pesan`.
+
+## Halaman galat
+
+`resources/views/errors/` berisi `403`, `404`, `419`, `429`, `500`, dan `503`. Laravel memilih berkas itu otomatis dari kode status, tanpa konfigurasi tambahan. Semuanya memakai `x-layouts.auth` karena layout aplikasi menuntut pengguna yang login, sedangkan halaman galat harus tetap terbaca oleh tamu.
 
 ## Enum `PostType`
 
