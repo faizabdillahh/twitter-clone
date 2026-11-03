@@ -13,7 +13,7 @@ Semua rute di bawah butuh login, kecuali yang ditandai publik.
 | `/posts/{post}/edit` | `posts.edit` | `EditPost` | 403 bila bukan penulis |
 | `/cari` | `search` | `SearchPosts` | Query `?q=` |
 | `/tag/{tag}` | `tag.show` | `SearchPosts` | Tag tanpa tanda `#` |
-| `/aktivitas` | `activities` | `Activities` | Suka, balasan, repost, dan pengikut baru |
+| `/aktivitas` | `activities` | `Activities` | Query `?tab=semua\|sebutan` |
 | `/dashboard` | `dashboard` | — | Dialihkan ke `/`, dipakai tujuan setelah daftar dan verifikasi email |
 | `/settings/profile` | `settings.profile` | `Profile` |  |
 | `/settings/password` | `settings.password` | Volt |  |
@@ -28,7 +28,8 @@ Rute `/{user}` didaftarkan **setelah** `require __DIR__.'/auth.php'`. Kalau dida
 | Komponen | Tugas | Method publik |
 | --- | --- | --- |
 | `Timeline` | Feed dua tab, muat otomatis per sepuluh post | `muatLagi`, `like`, `repost`, `hapus` |
-| `Activities` | Aktivitas orang lain pada post dan akun sendiri | — |
+| `Activities` | Bergaya notifikasi X: tab Semua (aktivitas orang lain pada post dan akun sendiri, ditambah tindakan sendiri) dan tab Sebutan (post yang menyebut `@username` ini) | `pilihTab` |
+| `Trends` | Empat hashtag dengan jumlah post terbanyak di rail kanan, tiap baris menuju `tag.show` | — |
 | `WhoToFollow` | Tiga rekomendasi akun di rail kanan | — |
 | `Thread` | Rantai induk, post yang dibuka, balasan, kotak balas | `like`, `repost`, `hapus` |
 | `Composer` | Menulis tweet, balasan, kutipan, lanjutan thread | `kirim`, `updatedMedia`, `hapusMedia`, `berhentiMerantai` |

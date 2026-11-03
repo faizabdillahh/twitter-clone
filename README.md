@@ -11,9 +11,10 @@ Dibangun dengan Laravel 13, Livewire 4, Flux UI, Tailwind CSS v4, dan MySQL 8.
 - **Suka dan ikuti.** Keduanya berlaku sebagai sakelar: klik kedua membatalkan. Feed punya tab `Semua` dan `Ikuti`.
 - **Profil publik.** Dibuka lewat `/{username}` dengan tab Postingan, Balasan, Media, Suka, Pengikut, dan Mengikuti.
 - **Pencarian.** Pencarian bebas pada isi post, nama, dan username; kata berawalan `#` dicari lewat relasi hashtag.
-- **Aktivitas.** Suka, balasan, repost, dan pengikut baru pada post serta akun sendiri.
+- **Aktivitas.** Halaman bergaya notifikasi X dengan tab `Semua` dan `Sebutan`. Tab pertama memuat aktivitas orang lain pada post serta akun sendiri sekaligus tindakan sendiri, tab kedua memuat post yang menyebut `@username` Anda.
+- **Tren.** Widget di rail kanan berisi empat hashtag dengan jumlah post terbanyak, masing-masing menuju halaman tag.
 - **Edit dan hapus.** Hanya penulisnya. Hapus bersifat lunak, sehingga balasan tetap dapat menampilkan konteks induk yang sudah dihapus.
-- **Antarmuka.** Tata letak tiga kolom seperti web X, navigasi bawah di ponsel, mode terang dan gelap.
+- **Antarmuka.** Tata letak tiga kolom seperti web X dengan rail kanan berisi pencarian, tren, dan rekomendasi akun, navigasi bawah di ponsel, serta mode terang dan gelap. Halaman masuk dan daftar memakai panel merek di kiri dan formulir di kanan.
 
 ## Kebutuhan
 

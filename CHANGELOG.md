@@ -54,6 +54,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Komponen `x-empty-state` sebagai keadaan kosong di beranda, utas, profil, pencarian, dan aktivitas.
 - Item Pengaturan di menu akun, karena halaman pengaturan sudah ada tetapi belum bisa dijangkau dari navigasi.
 - Halaman galat kustom di `resources/views/errors/` untuk 403, 404, 419, 429, 500, dan 503, memakai komponen `x-error-page` dan kerangka halaman tamu agar tetap terbaca tanpa login.
+- Widget `Trends` di rail kanan berisi empat hashtag dengan jumlah post terbanyak, tiap baris menampilkan `#tag`, jumlah post, dan tautan ke halaman tag; tag tanpa post tidak ditampilkan.
 
 ### Dihapus
 
@@ -118,6 +119,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Kotak balas di halaman utas tetap membalas post yang sama setelah kirim, tidak lagi berantai ke balasan pertama.
 - `Post::replies()` hanya mengembalikan balasan; kutipan tidak lagi muncul di daftar balasan halaman utas.
 - Halaman masuk dan daftar memakai tata letak dua kolom yang lazim di aplikasi besar: panel merek gelap dengan lambang dan satu kalimat penjelas di kiri, formulir berlabel 400px di kanan, tombol kirim selebar kolom. Panel merek disembunyikan di ponsel.
+- Halaman Aktivitas disusun ulang mengikuti halaman notifikasi X: dua tab Semua dan Sebutan yang disimpan di `?tab=`, tiap baris berisi ikon kejadian, nama pelaku, keterangan, waktu singkat, dan potongan post terkait, dengan keadaan kosong berbeda per tab.
 
 ### Diperbaiki
 
@@ -129,3 +131,5 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Jalur lambang X memakai bentuk resmi 24 piksel, sehingga sudut kiri bawah huruf X tidak lagi terpotong di sidebar dan nav ponsel.
 - `x-app-logo-icon` dihapus karena hanya dipakai kerangka auth lama dan isinya lambang Laravel, bukan lambang X.
 - `x-auth-header` kini rata kiri mengikuti formulir panel kanan, dan `x-auth-field` dihapus karena isian kembali memakai `flux:input` berlabel.
+- Halaman Aktivitas kini juga memuat tindakan sendiri (suka, balasan, kutipan, repost, dan akun yang diikuti) dengan kata "Anda", sehingga tidak lagi tampak kosong saat belum ada orang lain yang berinteraksi dengan akun itu.
+- Tab Sebutan hanya mencocokkan sebutan yang namanya persis, sehingga `@saya` tidak lagi ikut menangkap post yang menyebut `@sayang`.

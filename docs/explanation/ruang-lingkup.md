@@ -87,7 +87,7 @@ Batasan yang dipegang: tidak ada query di view, tidak ada aturan validasi yang d
 | Lapisan | Isi |
 | --- | --- |
 | `app/Enums` | `PostType` |
-| `app/Livewire` | `Timeline`, `Thread`, `Composer`, `EditPost`, `ProfilePage`, `SearchPosts`, `Activities`, `WhoToFollow`, `FollowButton` |
+| `app/Livewire` | `Timeline`, `Thread`, `Composer`, `EditPost`, `ProfilePage`, `SearchPosts`, `Activities`, `Trends`, `WhoToFollow`, `FollowButton` |
 | `app/Livewire/Concerns` | `TogglesLike`, `TogglesRepost`, `DeletesPost`, `ValidatesPostInput` |
 | `app/Support` | `PostWriter`, `PostCardStatus`, `HashtagSync`, `MediaUploader` |
 | `app/Policies` | `PostPolicy` untuk `update` dan `delete` |
@@ -137,7 +137,9 @@ Daftar rute lengkap beserta catatan urutannya ada di [reference/rute-dan-kompone
 
 **Profil bertab.** Postingan, Balasan, Media, Suka, Pengikut, dan Mengikuti. Tab disimpan di URL lewat `?tab=`.
 
-**Aktivitas.** Gabungan suka, balasan, repost, dan pengikut baru pada post serta akun sendiri, diurutkan mundur dan dibatasi tiga puluh baris terbaru.
+**Aktivitas.** Bergaya halaman notifikasi X dengan dua tab yang disimpan di `?tab=`. Tab **Semua** menggabungkan aktivitas orang lain terhadap post serta akun sendiri (suka, balasan, repost, pengikut baru) dengan tindakan sendiri (suka, balasan, kutipan, repost, akun yang diikuti), diurutkan mundur dan dibatasi tiga puluh baris terbaru. Tiap baris berisi ikon kejadian, pelaku, keterangan, waktu singkat, dan potongan post terkait. Baris milik sendiri memakai kata "Anda", jadi halaman ini tetap terisi walau belum ada orang lain yang berinteraksi. Tab **Sebutan** hanya memuat post orang lain yang menyebut `@username` ini; batas nama akunnya diperiksa, sehingga `@saya` tidak ikut cocok dengan `@sayang`.
+
+**Tren.** Widget di rail kanan berisi empat hashtag dengan jumlah post terbanyak, masing-masing menampilkan jumlah post dan menuju halaman tag. Tag tanpa post tidak ditampilkan, jadi widget hilang saat belum ada tag sama sekali.
 
 ## Aturan lintas fitur
 

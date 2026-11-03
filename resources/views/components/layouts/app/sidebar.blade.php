@@ -199,6 +199,9 @@
                     <input type="text" name="q" placeholder="Cari" class="h-[44px] w-full rounded-full border border-transparent bg-zinc-100 pr-4 pl-12 text-[15px] text-[#0f1419] outline-none transition placeholder:text-zinc-500 focus:border-[#1d9bf0] focus:bg-white focus:ring-1 focus:ring-[#1d9bf0] dark:bg-[#16181c] dark:text-[#e7e9ea] dark:focus:bg-black" />
                 </form>
 
+                {{-- Tren hashtag dengan jumlah post terbanyak. --}}
+                <livewire:trends />
+
                 {{-- Rekomendasi pengguna untuk diikuti di bilah samping kanan. --}}
                 <livewire:who-to-follow />
             </aside>
