@@ -29,7 +29,14 @@ class Composer extends Component
     use WithFileUploads;
 
     /**
-     * Gambar yang dipilih tetapi belum dikirim.
+     * Ekstensi lampiran yang diterima, dipakai validasi dan saringan pratinjau.
+     *
+     * @var list<string>
+     */
+    private const EKSTENSI_LAMPIRAN = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip'];
+
+    /**
+     * Lampiran yang dipilih tetapi belum dikirim.
      *
      * @var array<int, TemporaryUploadedFile>
      */
@@ -57,7 +64,7 @@ class Composer extends Component
         // Spasi di ujung tidak dihitung sebagai isi.
         $this->body = trim($this->body);
 
-        // Aturan body ditambah aturan khusus gambar.
+        // Aturan body ditambah aturan khusus lampiran.
         $this->validate($this->aturanPost());
 
         // Panjang dihitung per grapheme setelah validasi dasar lolos.
@@ -66,10 +73,10 @@ class Composer extends Component
         // Jenis dan induk harus cocok sebelum apa pun disimpan.
         $this->pastikanKombinasi();
 
-        // Post tanpa teks dan tanpa gambar tidak bermakna.
+        // Post tanpa teks dan tanpa lampiran tidak bermakna.
         if ($this->body === '' && $this->media === []) {
             // Pesan ditaruh di body supaya muncul di bawah kotak tulis.
-            $this->addError('body', 'Tulis sesuatu atau lampirkan gambar.');
+            $this->addError('body', 'Tulis sesuatu atau lampirkan berkas.');
 
             // Berhenti sebelum PostWriter dipanggil.
             return;
@@ -118,34 +125,34 @@ class Composer extends Component
     }
 
     /**
-     * Menyaring lampiran yang tidak memenuhi aturan gambar.
+     * Menyaring lampiran yang tidak memenuhi aturan berkas.
      */
     public function updatedMedia(): void
     {
-        // Hanya gambar sampai 5 MB yang boleh menunggu di kotak tulis.
+        // Lampiran harus bertipe dikenal dan tidak lebih dari 5 MB.
         foreach ($this->media as $indeks => $berkas) {
-            // Berkas yang tidak bisa dipratinjau atau kelebihan ukuran langsung dibuang.
-            if (! $berkas->isPreviewable() || $berkas->getSize() > 5 * 1024 * 1024) {
+            // Berkas bertipe asing atau kelebihan ukuran langsung dibuang.
+            if (! in_array(strtolower($berkas->getClientOriginalExtension()), self::EKSTENSI_LAMPIRAN, true) || $berkas->getSize() > 5 * 1024 * 1024) {
                 unset($this->media[$indeks]);
 
                 // Satu pesan untuk semua lampiran yang gugur.
-                $this->addError('media', 'Lampiran harus berupa gambar maksimal 5 MB.');
+                $this->addError('media', 'Lampiran harus berupa gambar, dokumen, atau arsip maksimal 5 MB.');
             }
         }
 
-        // Indeks dinomori ulang agar tombol buang menunjuk gambar yang benar.
+        // Indeks dinomori ulang agar tombol buang menunjuk lampiran yang benar.
         $this->media = array_values($this->media);
     }
 
     /**
-     * Membuang satu gambar dari pratinjau sebelum post dikirim.
+     * Membuang satu lampiran dari pratinjau sebelum post dikirim.
      */
     public function hapusMedia(int $indeks): void
     {
         // Kunci dilepas lebih dulu supaya urutan array tetap rapat.
         unset($this->media[$indeks]);
 
-        // Indeks dinomori ulang agar tombol gambar berikutnya tetap menunjuk gambar yang benar.
+        // Indeks dinomori ulang agar tombol lampiran berikutnya tetap menunjuk berkas yang benar.
         $this->media = array_values($this->media);
     }
 
@@ -163,16 +170,16 @@ class Composer extends Component
     }
 
     /**
-     * Menggabungkan aturan body dengan aturan unggahan gambar.
+     * Menggabungkan aturan body dengan aturan unggahan lampiran.
      *
      * @return array<string, mixed>
      */
     private function aturanPost(): array
     {
         return array_merge($this->aturanBody(), [
-            // Empat gambar per post, masing-masing maksimal 5 MB.
+            // Empat lampiran per post, masing-masing maksimal 5 MB.
             'media' => ['array', 'max:4'],
-            'media.*' => ['image', 'max:5120'],
+            'media.*' => ['file', 'mimes:'.implode(',', self::EKSTENSI_LAMPIRAN), 'max:5120'],
         ]);
     }
 

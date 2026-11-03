@@ -11,8 +11,12 @@
     <article class="border-b border-zinc-200 p-4 text-sm text-zinc-500 dark:border-[#2f3336]">Post ini sudah tidak tersedia.</article>
 @else
     @php
+        // Gambar tampil sebagai galeri, berkas lain tampil sebagai kartu unduhan.
+        $gambar = $asli->media->filter(fn ($satu) => $satu->isImage());
+        // Lampiran selain gambar ditampilkan terpisah di bawah galeri.
+        $lampiran = $asli->media->reject(fn ($satu) => $satu->isImage());
         // Jumlah gambar menentukan bentuk galeri.
-        $jumlahGambar = $asli->media->count();
+        $jumlahGambar = $gambar->count();
         // Hitungan balasan diambil dari status halaman.
         $jumlahBalas = $status['jumlahBalas'][$asli->id] ?? 0;
         // Hitungan repost diambil dari status halaman.
@@ -110,12 +114,30 @@
                 @if ($jumlahGambar > 0)
                     {{-- Galeri gambar mengikuti pola X: satu penuh, dua sejajar, tiga dengan gambar utama memanjang. --}}
                     <div class="mt-3 grid gap-0.5 overflow-hidden rounded-2xl border border-zinc-200 dark:border-[#2f3336] {{ $jumlahGambar > 1 ? 'grid-cols-2' : 'grid-cols-1' }}">
-                        @foreach ($asli->media as $gambar)
+                        @foreach ($gambar as $satu)
                             {{-- Gambar lampiran; gambar pertama melebar saat jumlahnya tiga. --}}
-                            <img src="{{ $gambar->url() }}" alt="Media dari {{ $asli->user->name }}" class="{{ $jumlahGambar === 1 ? 'max-h-[510px] w-full object-cover' : ($jumlahGambar === 3 && $loop->first ? 'row-span-2 h-full w-full object-cover' : 'aspect-square w-full object-cover') }}" />
+                            <img src="{{ $satu->url() }}" alt="Media dari {{ $asli->user->name }}" class="{{ $jumlahGambar === 1 ? 'max-h-[510px] w-full object-cover' : ($jumlahGambar === 3 && $loop->first ? 'row-span-2 h-full w-full object-cover' : 'aspect-square w-full object-cover') }}" />
                         @endforeach
                     </div>
                 @endif
+
+                @foreach ($lampiran as $satu)
+                    {{-- Kartu berkas lampiran: ikon, nama asli, dan tautan unduh. --}}
+                    <a href="{{ $satu->url() }}" download class="mt-3 flex items-center gap-3 rounded-2xl border border-zinc-200 p-3 transition-colors hover:bg-black/[0.02] dark:border-[#2f3336] dark:hover:bg-white/[0.02]">
+                        {{-- Ikon dokumen untuk lampiran berkas. --}}
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 shrink-0 fill-current text-[#1d9bf0]">
+                            {{-- Jalur ikon dokumen. --}}
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"></path>
+                        </svg>
+                        {{-- Nama berkas asli yang diunggah. --}}
+                        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold text-[#1d9bf0]">{{ $satu->label() }}</span>
+                        {{-- Ikon panah unduh. --}}
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 shrink-0 fill-current text-zinc-500">
+                            {{-- Jalur ikon unduh. --}}
+                            <path d="M12 3v10.59l3.3-3.3 1.4 1.42-5.7 5.7-5.7-5.7 1.4-1.42 3.3 3.3V3h2zM4 19h16v2H4v-2z"></path>
+                        </svg>
+                    </a>
+                @endforeach
 
                 @if ($asli->type === \App\Enums\PostType::Quote && $asli->parent && ! $asli->parent->trashed())
                     {{-- Kotak kutipan tweet berbingkai sudut melengkung. --}}

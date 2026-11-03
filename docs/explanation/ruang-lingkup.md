@@ -53,7 +53,7 @@ Repost menyimpan `repost_key` berisi `user_id:parent_id` yang diisi model saat m
 
 ## Aturan per tipe post
 
-| Tipe | `parent_id` | Body | Gambar |
+| Tipe | `parent_id` | Body | Lampiran |
 | --- | --- | --- | --- |
 | `tweet` | harus kosong | wajib | boleh |
 | `reply` | wajib | wajib | boleh |
@@ -68,7 +68,7 @@ Semua post memakai `SoftDeletes`. Menghapus post tidak menghapus balasan orang l
 
 Repost yang dibatalkan dihapus permanen dengan `forceDelete()`. Baris yang terhapus lunak tetap menempati `repost_key`, sehingga merepost post yang sama untuk kedua kalinya akan gagal bila baris lama hanya dihapus lunak.
 
-Menghapus post ikut membuang baris media dan berkas gambarnya. Hook `deleting` pada `Post` menghapus media satu per satu supaya hook `deleted` di `Media` sempat membuang berkasnya; penghapusan massal sengaja dihindari karena melewati event model.
+Menghapus post ikut membuang baris media dan berkas lampirannya. Hook `deleting` pada `Post` menghapus media satu per satu supaya hook `deleted` di `Media` sempat membuang berkasnya; penghapusan massal sengaja dihindari karena melewati event model.
 
 ## Arsitektur kode
 
@@ -117,7 +117,7 @@ Daftar rute lengkap beserta catatan urutannya ada di [reference/rute-dan-kompone
 
 **Profil.** Kolom `name`, `username`, `bio`, `location`, `website`, avatar, dan banner. Avatar dan banner disimpan di disk `public`. Profil publik menampilkan avatar, banner, nama, username, bio, lokasi, tautan website, tanggal bergabung, jumlah pengikut dan mengikuti, serta tombol ikuti atau tombol edit bila profil itu milik sendiri.
 
-**Membuat post.** Satu kotak tulis dipakai untuk tweet, balasan, dan kutipan. Mode ditentukan lewat parameter `tipe` saat komponen dipasang, atau lewat parameter `kutip` di halaman utas. Isi dan gambar disimpan oleh `PostWriter` dalam satu transaksi.
+**Membuat post.** Satu kotak tulis dipakai untuk tweet, balasan, dan kutipan. Mode ditentukan lewat parameter `tipe` saat komponen dipasang, atau lewat parameter `kutip` di halaman utas. Isi dan lampiran disimpan oleh `PostWriter` dalam satu transaksi.
 
 **Utas.** Setelah tweet terkirim, kotak tulis tetap terbuka dan kiriman berikutnya menjadi balasan ke kiriman sebelumnya. Tombol Selesai mengakhiri rantai. Balasan di halaman utas tidak berantai; kotak balas di sana tetap membalas post yang dibuka.
 
@@ -149,7 +149,9 @@ Daftar rute lengkap beserta catatan urutannya ada di [reference/rute-dan-kompone
 
 **Sebutan.** `x-post-body` meng-escape teks lebih dulu, lalu menautkan hashtag dan `@username`. Escape sebelum penautan, bukan sesudahnya, agar isi post tidak dapat menyisipkan HTML.
 
-**Gambar.** Maksimal empat gambar per post, masing-masing maksimal 5 MB, disimpan di disk `public` dengan nama acak hasil `store()`. Hanya tipe gambar yang diterima; lampiran berkas tidak didukung. Berkas yang bukan gambar atau melebihi batas ukuran dibuang sejak dipilih di kotak tulis, dengan pesan di bawah kotak tulis.
+**Lampiran.** Maksimal empat berkas per post, masing-masing maksimal 5 MB, disimpan di disk `public` dengan nama acak hasil `store()` dan nama aslinya dicatat di kolom `media.name`. Ekstensi yang diterima: `jpg`, `jpeg`, `png`, `webp`, `gif`, `pdf`, `doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`, `txt`, `csv`, dan `zip`. Tipe lain, termasuk berkas program dan SVG, dibuang sejak dipilih di kotak tulis dengan pesan di bawahnya, lalu divalidasi ulang saat kirim lewat aturan `mimes`.
+
+**Tampilan lampiran.** `Media::isImage()` membaca ekstensi path. Gambar dirender sebagai galeri seperti X (satu penuh, dua sejajar, tiga dengan gambar utama memanjang), sedangkan berkas lain dirender sebagai kartu berisi ikon dokumen, nama asli, dan ikon unduh yang menautkan URL diska dengan atribut `download`.
 
 **Otorisasi.** Setiap aksi ubah dan hapus melewati `PostPolicy`. Aksi Livewire dapat datang tanpa melewati `mount()`, jadi pemeriksaan diulang di dalam method.
 
@@ -161,7 +163,7 @@ Escaping Blade dipakai untuk semua keluaran. Mass assignment dibatasi `$fillable
 
 Uji otomatis menyasar logika berisiko, bukan setiap baris. Sebagian besar memakai `Livewire::test()` karena logikanya berada di komponen.
 
-Sudah tercakup: penyimpanan post beserta gambar dan hashtag, penolakan body di atas 250 grapheme, hitungan emoji, penolakan post kosong, penolakan gambar di atas 5 MB dan berkas non-gambar, batas tiga puluh kiriman per menit, pembersihan gambar saat post dihapus, isi post terhapus tidak tampil lewat repost, pengosongan formulir setelah kirim, feed dan rantai induk, penanda induk terhapus, balasan di bawah induk yang benar, aturan kutipan, sakelar repost, penolakan tweet berinduk, penyambungan utas, suka yang bertahan setelah muat ulang dan dapat dibatalkan, feed `Ikuti`, tombol ikuti, penolakan mengikuti diri sendiri, keenam tab profil, muat otomatis beranda, pencarian, hak akses edit dan hapus, serta tautan sebutan.
+Sudah tercakup: penyimpanan post beserta lampiran dan hashtag, penolakan body di atas 250 grapheme, hitungan emoji, penolakan post kosong, penolakan lampiran di atas 5 MB dan berkas bertipe asing, penyimpanan nama asli berkas non-gambar beserta tautan unduhnya, batas tiga puluh kiriman per menit, pembersihan gambar saat post dihapus, isi post terhapus tidak tampil lewat repost, pengosongan formulir setelah kirim, feed dan rantai induk, penanda induk terhapus, balasan di bawah induk yang benar, aturan kutipan, sakelar repost, penolakan tweet berinduk, penyambungan utas, suka yang bertahan setelah muat ulang dan dapat dibatalkan, feed `Ikuti`, tombol ikuti, penolakan mengikuti diri sendiri, keenam tab profil, muat otomatis beranda, pencarian, hak akses edit dan hapus, serta tautan sebutan.
 
 Belum tercakup dan layak ditambahkan: uji XSS pada body, uji batas laju lintas jendela waktu, dan uji beban untuk feed.
 

@@ -474,17 +474,43 @@ class PostTest extends TestCase
         $this->assertSame(0, Post::count());
     }
 
-    public function test_non_image_upload_is_rejected(): void
+    public function test_non_image_attachment_is_saved_and_listed(): void
     {
         // Disk palsu supaya berkas uji tidak menumpuk di storage asli.
         Storage::fake('public');
 
         $this->actingAs(User::factory()->create());
 
-        // Berkas PDF bukan gambar, jadi ditolak sebelum sempat dipratinjau.
+        // Berkas PDF kini diterima sebagai lampiran post.
         Livewire::test(Composer::class)
             ->set('body', 'Post dengan dokumen')
             ->set('media', [UploadedFile::fake()->create('dokumen.pdf', 100, 'application/pdf')])
+            ->call('kirim')
+            ->assertHasNoErrors();
+
+        // Baris media menyimpan nama asli berkas untuk label unduhan.
+        $media = Media::firstOrFail();
+        $this->assertSame('dokumen.pdf', $media->name);
+        $this->assertFalse($media->isImage());
+        Storage::disk('public')->assertExists($media->path);
+
+        // Kartu post menampilkan nama berkas beserta tautan unduhannya.
+        Livewire::test(Timeline::class)
+            ->assertSee('dokumen.pdf')
+            ->assertSee($media->url(), false);
+    }
+
+    public function test_unknown_file_type_is_rejected(): void
+    {
+        // Disk palsu supaya berkas uji tidak menumpuk di storage asli.
+        Storage::fake('public');
+
+        $this->actingAs(User::factory()->create());
+
+        // Berkas program tidak ada dalam daftar ekstensi lampiran.
+        Livewire::test(Composer::class)
+            ->set('body', 'Post dengan berkas asing')
+            ->set('media', [UploadedFile::fake()->create('skrip.exe', 100)])
             ->assertHasErrors('media')
             ->assertCount('media', 0);
 

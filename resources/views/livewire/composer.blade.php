@@ -59,22 +59,43 @@
             @enderror
 
             @if ($media !== [])
-                {{-- Pratinjau media gambar beradius lengkung 16px. --}}
+                {{-- Pratinjau lampiran beradius lengkung 16px. --}}
                 <div class="mt-3 grid grid-cols-2 gap-2 overflow-hidden rounded-2xl border border-zinc-200 dark:border-[#2f3336]">
-                    @foreach ($media as $gambar)
-                        {{-- Bingkai gambar sementara yang diunggah. --}}
-                        <div class="relative">
-                            {{-- Gambar sementara yang diunggah. --}}
-                            <img src="{{ $gambar->temporaryUrl() }}" alt="Pratinjau gambar" class="h-44 w-full object-cover" />
-                            {{-- Tombol membuang gambar sebelum dikirim, sama seperti X. --}}
-                            <button type="button" wire:click="hapusMedia({{ $loop->index }})" class="absolute top-2 right-2 flex size-7 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black/85" aria-label="Hapus gambar">
-                                {{-- Ikon silang penutup. --}}
-                                <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 fill-current">
-                                    {{-- Jalur silang. --}}
-                                    <path d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"></path>
+                    @foreach ($media as $berkas)
+                        @if ($berkas->isPreviewable())
+                            {{-- Bingkai gambar sementara yang diunggah. --}}
+                            <div class="relative">
+                                {{-- Gambar sementara yang diunggah. --}}
+                                <img src="{{ $berkas->temporaryUrl() }}" alt="Pratinjau gambar" class="h-44 w-full object-cover" />
+                                {{-- Tombol membuang gambar sebelum dikirim, sama seperti X. --}}
+                                <button type="button" wire:click="hapusMedia({{ $loop->index }})" class="absolute top-2 right-2 flex size-7 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black/85" aria-label="Hapus gambar">
+                                    {{-- Ikon silang penutup. --}}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 fill-current">
+                                        {{-- Jalur silang. --}}
+                                        <path d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        @else
+                            {{-- Berkas selain gambar tampil selebar kolom sebagai kartu nama berkas. --}}
+                            <div class="relative col-span-2 flex items-center gap-3 px-3 py-4">
+                                {{-- Ikon dokumen untuk lampiran berkas. --}}
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 shrink-0 fill-current text-[#1d9bf0]">
+                                    {{-- Jalur ikon dokumen. --}}
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"></path>
                                 </svg>
-                            </button>
-                        </div>
+                                {{-- Nama berkas yang dipilih. --}}
+                                <span class="min-w-0 flex-1 truncate text-sm font-semibold text-[#0f1419] dark:text-[#e7e9ea]">{{ $berkas->getClientOriginalName() }}</span>
+                                {{-- Tombol membuang berkas sebelum dikirim. --}}
+                                <button type="button" wire:click="hapusMedia({{ $loop->index }})" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black/85" aria-label="Hapus berkas">
+                                    {{-- Ikon silang penutup. --}}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 fill-current">
+                                        {{-- Jalur silang. --}}
+                                        <path d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             @endif
@@ -83,10 +104,10 @@
             <div class="mt-3 border-t border-zinc-100 pt-2.5 dark:border-[#2f3336]/60">
                 {{-- Penampung flex tombol media dan tombol posting. --}}
                 <div class="flex items-center justify-between">
-                    {{-- Tombol lampiran foto berikon resmi X. --}}
-                    <label class="flex size-9 cursor-pointer items-center justify-center rounded-full text-[#1d9bf0] transition-colors hover:bg-[#1d9bf0]/10" title="Media">
-                        {{-- Input berkas gambar disembunyikan. --}}
-                        <input wire:model="media" type="file" multiple accept="image/png,image/jpeg,image/webp" class="sr-only" />
+                    {{-- Tombol lampiran berikon resmi X. --}}
+                    <label class="flex size-9 cursor-pointer items-center justify-center rounded-full text-[#1d9bf0] transition-colors hover:bg-[#1d9bf0]/10" title="Lampiran">
+                        {{-- Input berkas yang disembunyikan; menerima gambar, dokumen, dan arsip. --}}
+                        <input wire:model="media" type="file" multiple class="sr-only" />
                         {{-- Ikon gambar resmi X. --}}
                         <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 fill-current">
                             {{-- Jalur ikon galeri foto. --}}

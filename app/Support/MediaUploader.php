@@ -19,8 +19,12 @@ class MediaUploader
     {
         // Urutan unggahan dipakai apa adanya sebagai posisi tampil.
         foreach ($berkas as $posisi => $satu) {
-            // Berkas masuk disk public; database hanya menyimpan path relatif.
-            $post->media()->create(['path' => $satu->store('posts', 'public'), 'position' => $posisi]);
+            // Berkas masuk disk public; database menyimpan path relatif dan nama aslinya.
+            $post->media()->create([
+                'path' => $satu->store('posts', 'public'),
+                'name' => $satu->getClientOriginalName(),
+                'position' => $posisi,
+            ]);
         }
     }
 }

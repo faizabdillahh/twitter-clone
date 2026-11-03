@@ -40,7 +40,7 @@ Rute `/{user}` didaftarkan **setelah** `require __DIR__.'/auth.php'`. Kalau dida
 
 `hapus` pada `Timeline`, `Thread`, `ProfilePage`, dan `SearchPosts` berasal dari trait `App\Livewire\Concerns\DeletesPost`. Komponen baru yang menampilkan `x-post-card` wajib memakai trait itu, karena menu tiga titik di kartu memanggil method tersebut.
 
-`Post::deleting` membuang baris media dan berkasnya setiap kali post dihapus. Penghapusan lewat query massal melewati hook itu dan meninggalkan gambar yatim.
+`Post::deleting` membuang baris media dan berkasnya setiap kali post dihapus. Penghapusan lewat query massal melewati hook itu dan meninggalkan berkas yatim.
 
 ## Kelas pendukung
 
@@ -48,7 +48,7 @@ Rute `/{user}` didaftarkan **setelah** `require __DIR__.'/auth.php'`. Kalau dida
 | --- | --- |
 | `App\Support\PostWriter` | Membuat post beserta media dan hashtag dalam satu transaksi |
 | `App\Support\HashtagSync` | Menyelaraskan relasi hashtag dengan isi body |
-| `App\Support\MediaUploader` | Menyimpan gambar dan mencatat urutannya |
+| `App\Support\MediaUploader` | Menyimpan lampiran ke disk `public` beserta nama asli dan urutannya |
 | `App\Support\PostCardStatus` | Menghitung status tombol dan jumlah balasan, repost, serta suka untuk semua kartu di satu layar |
 | `App\Policies\PostPolicy` | Aturan `update` dan `delete` |
 

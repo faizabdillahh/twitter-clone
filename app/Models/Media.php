@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Gambar yang menempel pada satu post.
+ * Lampiran yang menempel pada satu post: gambar atau berkas lain.
  *
- * Berkasnya disimpan di disk `public`; yang masuk database hanya path relatif.
+ * Berkasnya disimpan di disk `public`; yang masuk database hanya path relatif dan nama asli.
  */
 class Media extends Model
 {
@@ -20,6 +20,7 @@ class Media extends Model
      */
     protected $fillable = [
         'path',
+        'name',
         'position',
     ];
 
@@ -33,12 +34,30 @@ class Media extends Model
     }
 
     /**
-     * URL siap pakai di tag img.
+     * URL siap pakai di tag img atau tautan unduh.
      */
     public function url(): string
     {
         // Domain mengikuti konfigurasi disk, bukan disimpan di database.
         return Storage::disk('public')->url($this->path);
+    }
+
+    /**
+     * Menandai lampiran yang bisa ditampilkan sebagai gambar.
+     */
+    public function isImage(): bool
+    {
+        // Nama berkas di disk masih membawa ekstensi aslinya, jadi tidak perlu kolom tipe.
+        return in_array(strtolower(pathinfo($this->path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'webp', 'gif'], true);
+    }
+
+    /**
+     * Nama berkas yang ditampilkan pada kartu lampiran.
+     */
+    public function label(): string
+    {
+        // Baris lama belum punya nama asli, jadi nama berkas di disk dipakai sebagai gantinya.
+        return $this->name ?: basename($this->path);
     }
 
     /**

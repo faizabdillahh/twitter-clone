@@ -6,7 +6,7 @@ Dibangun dengan Laravel 13, Livewire 4, Flux UI, Tailwind CSS v4, dan MySQL 8.
 
 ## Fitur
 
-- **Post dan utas.** Menulis sampai 250 karakter; emoji dihitung satu karakter karena panjang diukur per grapheme. Satu post dapat membawa sampai empat gambar. Kiriman berikutnya dapat disambung menjadi utas.
+- **Post dan utas.** Menulis sampai 250 karakter; emoji dihitung satu karakter karena panjang diukur per grapheme. Satu post dapat membawa sampai empat lampiran (gambar, PDF, dokumen kantor, teks, CSV, atau ZIP) dengan batas 5 MB per berkas. Kiriman berikutnya dapat disambung menjadi utas.
 - **Balasan, kutipan, dan repost.** Balasan hanya muncul di halaman induknya, kutipan membawa post lain sebagai lampiran, dan repost tidak menyimpan teks sendiri.
 - **Suka dan ikuti.** Keduanya berlaku sebagai sakelar: klik kedua membatalkan. Feed punya tab `Semua` dan `Ikuti`.
 - **Profil publik.** Dibuka lewat `/{username}` dengan tab Postingan, Balasan, Media, Suka, Pengikut, dan Mengikuti.

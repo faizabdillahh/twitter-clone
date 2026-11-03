@@ -55,6 +55,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Item Pengaturan di menu akun, karena halaman pengaturan sudah ada tetapi belum bisa dijangkau dari navigasi.
 - Halaman galat kustom di `resources/views/errors/` untuk 403, 404, 419, 429, 500, dan 503, memakai komponen `x-error-page` dan kerangka halaman tamu agar tetap terbaca tanpa login.
 - Widget `Trends` di rail kanan berisi empat hashtag dengan jumlah post terbanyak, tiap baris menampilkan `#tag`, jumlah post, dan tautan ke halaman tag; tag tanpa post tidak ditampilkan.
+- Lampiran berkas non-gambar pada post: PDF, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT, CSV, ZIP, dan GIF, maksimal empat berkas 5 MB per post. Kolom `media.name` menyimpan nama berkas asli untuk label unduhan.
 
 ### Dihapus
 
@@ -120,6 +121,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - `Post::replies()` hanya mengembalikan balasan; kutipan tidak lagi muncul di daftar balasan halaman utas.
 - Halaman masuk dan daftar memakai tata letak dua kolom yang lazim di aplikasi besar: panel merek gelap dengan lambang dan satu kalimat penjelas di kiri, formulir berlabel 400px di kanan, tombol kirim selebar kolom. Panel merek disembunyikan di ponsel.
 - Halaman Aktivitas disusun ulang mengikuti halaman notifikasi X: dua tab Semua dan Sebutan yang disimpan di `?tab=`, tiap baris berisi ikon kejadian, nama pelaku, keterangan, waktu singkat, dan potongan post terkait, dengan keadaan kosong berbeda per tab.
+- Kotak tulis tidak lagi membatasi pemilih berkas ke gambar (atribut `accept` dilepas); berkas non-gambar tampil sebagai kartu nama berkas di pratinjau, sedangkan setelah terkirim menjadi kartu unduhan berisi ikon dokumen, nama asli, dan panah unduh. Galeri gambar kini hanya berisi lampiran gambar.
 
 ### Diperbaiki
 

@@ -7,9 +7,11 @@ Cara memakai kotak tulis untuk percakapan yang lebih dari satu post, lalu menyun
 1. Buka beranda dan ketik di kotak paling atas.
 2. Tekan **Posting**. Post muncul di feed paling atas.
 
-Tombol Posting terkunci selama isi kosong dan tidak ada gambar. Penghitung di kanan bawah hanya muncul saat ada teks, berwarna kuning di atas 230 karakter dan merah di atas 250. Hitungannya memakai grapheme, jadi emoji dihitung satu karakter.
+Tombol Posting terkunci selama isi kosong dan tidak ada lampiran. Penghitung di kanan bawah hanya muncul saat ada teks, berwarna kuning di atas 230 karakter dan merah di atas 250. Hitungannya memakai grapheme, jadi emoji dihitung satu karakter.
 
-Ikon gambar di kiri bawah menempelkan lampiran. Yang diterima hanya gambar, maksimal empat berkas dan 5 MB per berkas. Berkas lain atau yang kelebihan ukuran langsung dibuang saat dipilih, dan pesannya muncul di bawah kotak tulis.
+Ikon gambar di kiri bawah menempelkan lampiran: maksimal empat berkas, 5 MB per berkas. Gambar tampil sebagai pratinjau, berkas lain tampil sebagai kartu berisi nama berkasnya. Ekstensi yang diterima adalah `jpg`, `jpeg`, `png`, `webp`, `gif`, `pdf`, `doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`, `txt`, `csv`, dan `zip`; berkas tipe lain atau yang kelebihan ukuran langsung dibuang saat dipilih, dan pesannya muncul di bawah kotak tulis.
+
+Setelah terkirim, gambar muncul sebagai galeri dan berkas lain muncul sebagai kartu unduhan berisi nama asli berkasnya.
 
 ## Menyambung utas
 
@@ -42,7 +44,7 @@ Kutipan dibuka dari menu pada kartu: tekan ikon repost, lalu pilih **Kutip post*
 
 Buka menu tiga titik di kanan atas kartu post milik sendiri, lalu pilih **Sunting post**. Ubah isi, lalu simpan. Post yang pernah diubah diberi penanda `diedit`. Hashtag ikut disesuaikan: tag yang dihapus dari teks ikut lepas dari post.
 
-Untuk menghapus, pilih **Hapus post** pada menu yang sama, lalu setujui konfirmasi. Post hilang dari feed, tetapi balasan orang lain tetap dapat dibuka dan menampilkan `Post induk sudah dihapus.` Gambar yang menempel ikut terhapus dari disk, jadi tautannya tidak bisa dibuka lagi, dan repost orang lain atas post itu tidak lagi menampilkan isinya.
+Untuk menghapus, pilih **Hapus post** pada menu yang sama, lalu setujui konfirmasi. Post hilang dari feed, tetapi balasan orang lain tetap dapat dibuka dan menampilkan `Post induk sudah dihapus.` Lampiran yang menempel ikut terhapus dari disk, jadi tautannya tidak bisa dibuka lagi, dan repost orang lain atas post itu tidak lagi menampilkan isinya.
 
 Menu tiga titik hanya muncul pada post milik sendiri. Repost tidak punya pilihan Sunting karena tidak menyimpan teks sendiri.
 
