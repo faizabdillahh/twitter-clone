@@ -31,8 +31,11 @@
 
     {{-- Kotak tulis postingan untuk pengguna terotentikasi. --}}
     @auth
-        {{-- Komponen kotak tulis. --}}
-        <livewire:composer />
+        {{-- Jangkar #tulis dipakai pintasan tombol Post dan tombol melayang ponsel. --}}
+        <div id="tulis" tabindex="-1">
+            {{-- Komponen kotak tulis. --}}
+            <livewire:composer />
+        </div>
     @endauth
 
     {{-- Daftar kartu postingan linimasa. --}}

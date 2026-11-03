@@ -122,6 +122,7 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Halaman masuk dan daftar memakai tata letak dua kolom yang lazim di aplikasi besar: panel merek gelap dengan lambang dan satu kalimat penjelas di kiri, formulir berlabel 400px di kanan, tombol kirim selebar kolom. Panel merek disembunyikan di ponsel.
 - Halaman Aktivitas disusun ulang mengikuti halaman notifikasi X: dua tab Semua dan Sebutan yang disimpan di `?tab=`, tiap baris berisi ikon kejadian, nama pelaku, keterangan, waktu singkat, dan potongan post terkait, dengan keadaan kosong berbeda per tab.
 - Kotak tulis tidak lagi membatasi pemilih berkas ke gambar (atribut `accept` dilepas); berkas non-gambar tampil sebagai kartu nama berkas di pratinjau, sedangkan setelah terkirim menjadi kartu unduhan berisi ikon dokumen, nama asli, dan panah unduh. Galeri gambar kini hanya berisi lampiran gambar.
+- Tombol Post di sidebar kiri dan tombol melayang ponsel membuka kotak tulis sebagai dialog ala x.com, tanpa pindah halaman, dan dialog menutup sendiri setelah post terkirim.
 
 ### Diperbaiki
 
@@ -133,5 +134,6 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/), versi
 - Jalur lambang X memakai bentuk resmi 24 piksel, sehingga sudut kiri bawah huruf X tidak lagi terpotong di sidebar dan nav ponsel.
 - `x-app-logo-icon` dihapus karena hanya dipakai kerangka auth lama dan isinya lambang Laravel, bukan lambang X.
 - `x-auth-header` kini rata kiri mengikuti formulir panel kanan, dan `x-auth-field` dihapus karena isian kembali memakai `flux:input` berlabel.
+- Ikon lonceng di sidebar kini bergaris seperti ikon menu lain dan baru terisi penuh saat halaman Aktivitas dibuka.
 - Halaman Aktivitas kini juga memuat tindakan sendiri (suka, balasan, kutipan, repost, dan akun yang diikuti) dengan kata "Anda", sehingga tidak lagi tampak kosong saat belum ada orang lain yang berinteraksi dengan akun itu.
 - Tab Sebutan hanya mencocokkan sebutan yang namanya persis, sehingga `@saya` tidak lagi ikut menangkap post yang menyebut `@sayang`.

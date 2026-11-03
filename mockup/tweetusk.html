@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>tweetUSK — Mock-up</title>
+<style>
+  :root {
+    --latar: #ffffff;
+    --latar2: #f7f9f9;
+    --teks: #0f1419;
+    --teks2: #536471;
+    --garis: #eff3f4;
+    --hover: rgba(0, 0, 0, 0.03);
+    --biru: #1d9bf0;
+    --pink: #f91880;
+    --hijau: #00ba7c;
+  }
+
+  html.gelap {
+    --latar: #000000;
+    --latar2: #16181c;
+    --teks: #e7e9ea;
+    --teks2: #71767b;
+    --garis: #2f3336;
+    --hover: rgba(255, 255, 255, 0.03);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--latar);
+    color: var(--teks);
+    font: 15px/1.4 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  button { font: inherit; color: inherit; }
+  svg { display: block; }
+
+  .aplikasi { display: flex; justify-content: center; max-width: 1280px; margin: 0 auto; }
+  .min0 { min-width: 0; flex: 1; }
+  .redup { color: var(--teks2); }
+  .tebal { font-weight: 700; }
+  .warna-biru { color: var(--biru); }
+  .warna-pink { color: var(--pink); }
+  .warna-hijau { color: var(--hijau); }
+
+  /* ---------- Rail kiri ---------- */
+  .rail-kiri { width: 275px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 8px 12px; flex: none; }
+  .merek { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 999px; margin: 4px 0 4px 4px; color: var(--teks); }
+  .merek:hover { background: var(--hover); }
+  .merek svg { width: 30px; height: 30px; }
+  .nav { display: flex; align-items: center; gap: 16px; padding: 11px 12px; margin: 2px 0; width: max-content; border: 0; border-radius: 999px; background: none; cursor: pointer; font-size: 20px; }
+  .nav svg { width: 26px; height: 26px; }
+  .nav:hover { background: var(--hover); }
+  .nav.aktif { font-weight: 800; }
+  .tombol-tulis { margin-top: 16px; width: 100%; padding: 14px; border: 0; border-radius: 999px; background: var(--biru); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; }
+  .tombol-tulis:hover { background: #1a8cd8; }
+  .akun { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border: 0; border-radius: 999px; background: none; cursor: pointer; text-align: left; }
+  .akun:hover { background: var(--hover); }
+  .akun__nama { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .akun__handle { font-size: 14px; color: var(--teks2); }
+  .ikon-tema { margin-left: auto; width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 999px; background: none; color: var(--teks2); cursor: pointer; }
+  .ikon-tema:hover { background: var(--hover); color: var(--teks); }
+  .ikon-tema svg { width: 20px; height: 20px; }
+
+  /* ---------- Kolom tengah ---------- */
+  .kolom { width: 600px; min-height: 100vh; border-left: 1px solid var(--garis); border-right: 1px solid var(--garis); flex: none; }
+  .layar { display: none; }
+  .layar.aktif { display: block; }
+  .kepala { position: sticky; top: 0; z-index: 5; background: var(--latar); border-bottom: 1px solid var(--garis); }
+  .kepala__judul { height: 53px; margin: 0; display: flex; align-items: center; padding: 0 16px; font-size: 20px; font-weight: 800; }
+  .daftar-tab { display: flex; }
+  .tab { position: relative; flex: 1; padding: 14px 0; border: 0; background: none; color: var(--teks2); font-weight: 700; cursor: pointer; }
+  .tab:hover { background: var(--hover); }
+  .tab.aktif { color: var(--teks); }
+  .tab.aktif::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 56px; height: 4px; transform: translateX(-50%); border-radius: 999px; background: var(--biru); }
+  .panel { display: none; }
+  .panel.aktif { display: block; }
+
+  /* ---------- Kotak tulis ---------- */
+  .tulis { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--garis); }
+  .tulis textarea { width: 100%; min-height: 56px; border: 0; background: none; color: var(--teks); font: inherit; font-size: 20px; line-height: 1.4; resize: none; outline: none; padding: 8px 0; }
+  .tulis textarea::placeholder { color: var(--teks2); }
+  .tulis__bawah { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--garis); }
+  .tulis__ikon { display: flex; align-items: center; gap: 2px; }
+  .ikon-bulat { width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: 999px; background: none; color: var(--biru); cursor: pointer; }
+  .ikon-bulat:hover { background: rgba(29, 155, 240, 0.1); }
+  .ikon-bulat svg { width: 20px; height: 20px; }
+  .posting { padding: 8px 18px; border: 0; border-radius: 999px; background: var(--biru); color: #fff; font-weight: 700; cursor: pointer; }
+  .posting:hover { background: #1a8cd8; }
+  .posting:disabled { opacity: 0.5; cursor: not-allowed; }
+  .lampiran-daftar { display: flex; flex-wrap: wrap; }
+  .lampiran-daftar[hidden] { display: none; }
+  .ikon-tema .ikon-matahari { display: none; }
+  html.gelap .ikon-tema .ikon-matahari { display: block; }
+  html.gelap .ikon-tema .ikon-bulan { display: none; }
+  .chip { display: inline-block; margin: 6px 6px 0 0; padding: 6px 10px; border-radius: 999px; background: var(--latar2); font-size: 13px; }
+
+  /* ---------- Kartu post ---------- */
+  .post { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--garis); }
+  .post:hover { background: var(--hover); }
+  .post__tajuk { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+  .post__tajuk b { font-weight: 700; }
+  .post__waktu { color: var(--teks2); font-size: 15px; }
+  .post__teks { margin: 2px 0 0; white-space: pre-wrap; }
+  .post__teks a { color: var(--biru); text-decoration: none; }
+  .post__aksi { display: flex; justify-content: space-between; max-width: 425px; margin-top: 10px; color: var(--teks2); font-size: 13px; }
+  .aksi { display: flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+  .aksi svg { width: 18px; height: 18px; }
+  .aksi:hover { color: var(--biru); }
+  .aksi-suka:hover, .aksi-suka.disuka { color: var(--pink); }
+  .aksi-suka.disuka svg { fill: currentColor; }
+  .aksi-titik { margin-left: auto; align-self: flex-start; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 999px; background: none; color: var(--teks2); cursor: pointer; }
+  .aksi-titik:hover { background: rgba(29, 155, 240, 0.1); color: var(--biru); }
+  .aksi-titik svg { width: 18px; height: 18px; }
+  .repost-leluhur { display: flex; align-items: center; gap: 8px; margin: 0 0 6px 52px; color: var(--teks2); font-size: 13px; font-weight: 700; }
+  .repost-leluhur svg { width: 16px; height: 16px; color: var(--hijau); }
+
+  .avatar { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 999px; color: #fff; font-size: 13px; font-weight: 700; }
+  .avatar--kecil { width: 32px; height: 32px; font-size: 11px; }
+  .avatar--ap { background: linear-gradient(135deg, #1d9bf0, #7856ff); }
+  .avatar--bl { background: linear-gradient(135deg, #f91880, #ffb01f); }
+  .avatar--cw { background: linear-gradient(135deg, #00ba7c, #0f7b6c); }
+  .avatar--dk { background: linear-gradient(135deg, #7856ff, #f91880); }
+
+  .galeri { display: grid; gap: 2px; margin-top: 10px; border: 1px solid var(--garis); border-radius: 16px; overflow: hidden; }
+  .galeri--2 { grid-template-columns: 1fr 1fr; }
+  .foto { aspect-ratio: 1; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+  .foto--a { background: linear-gradient(140deg, #1d9bf0, #7856ff); }
+  .foto--b { background: linear-gradient(140deg, #f91880, #ff7a45); }
+  .foto--c { background: linear-gradient(140deg, #00ba7c, #1d9bf0); }
+  .foto--d { background: linear-gradient(140deg, #ffb01f, #f91880); }
+
+  .lampiran { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--garis); border-radius: 16px; text-decoration: none; color: inherit; }
+  .lampiran:hover { background: var(--hover); }
+  .lampiran svg { width: 20px; height: 20px; flex: none; }
+  .lampiran__nama { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: var(--biru); }
+
+  .kutipan { margin-top: 10px; padding: 12px; border: 1px solid var(--garis); border-radius: 16px; }
+  .kutipan__tajuk { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+  .kutipan__teks { margin: 6px 0 0; font-size: 14px; }
+
+  /* ---------- Aktivitas ---------- */
+  .notif { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--garis); text-decoration: none; color: inherit; }
+  .notif:hover { background: var(--hover); }
+  .notif__ikon { width: 30px; flex: none; display: flex; justify-content: center; padding-top: 2px; }
+  .notif__ikon svg { width: 24px; height: 24px; }
+  .notif__baris { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+  .cuplikan { margin: 4px 0 0; color: var(--teks2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .kosong { padding: 48px 32px; text-align: center; }
+  .kosong h2 { margin: 0; font-size: 30px; font-weight: 800; }
+  .kosong p { margin: 8px 0 0; color: var(--teks2); }
+
+  /* ---------- Profil ---------- */
+  .banner { height: 200px; background: linear-gradient(120deg, #1d9bf0, #7856ff 55%, #f91880); }
+  .profil__info { padding: 0 16px 12px; }
+  .profil__baris { display: flex; align-items: flex-end; justify-content: space-between; margin-top: -68px; }
+  .profil__avatar { width: 133px; height: 133px; border: 4px solid var(--latar); border-radius: 999px; display: grid; place-items: center; color: #fff; font-size: 34px; font-weight: 800; background: linear-gradient(135deg, #1d9bf0, #7856ff); }
+  .tombol-garis { padding: 8px 16px; border: 1px solid var(--garis); border-radius: 999px; background: none; font-weight: 700; cursor: pointer; }
+  .tombol-garis:hover { background: var(--hover); }
+  .profil__nama { margin: 12px 0 0; font-size: 20px; font-weight: 800; }
+  .profil__handle { color: var(--teks2); }
+  .profil__bio { margin: 12px 0 0; }
+  .profil__meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; color: var(--teks2); font-size: 15px; }
+  .profil__meta svg { width: 18px; height: 18px; }
+  .statistik { display: flex; gap: 18px; margin-top: 10px; color: var(--teks2); }
+  .statistik b { color: var(--teks); }
+
+  /* ---------- Rail kanan ---------- */
+  .rail-kanan { width: 350px; flex: none; align-self: flex-start; position: sticky; top: 0; max-height: 100vh; overflow-y: auto; padding: 0 12px 24px; }
+  .cari { display: flex; align-items: center; gap: 8px; margin: 8px 0 4px; padding: 10px 16px; border-radius: 999px; background: var(--latar2); color: var(--teks2); }
+  .cari svg { width: 18px; height: 18px; flex: none; }
+  .cari input { width: 100%; border: 0; background: none; color: var(--teks); outline: none; font: inherit; }
+  .kartu { margin-top: 16px; border: 1px solid var(--garis); border-radius: 16px; background: var(--latar2); overflow: hidden; }
+  .kartu__judul { margin: 0; padding: 12px 16px 8px; font-size: 20px; font-weight: 800; }
+  .tren { display: block; padding: 10px 16px; text-decoration: none; color: inherit; }
+  .tren:hover { background: var(--hover); }
+  .tren__label { font-size: 13px; color: var(--teks2); }
+  .tren__tag { font-size: 15px; font-weight: 700; }
+  .tren__jumlah { font-size: 13px; color: var(--teks2); }
+  .saran { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+  .saran:hover { background: var(--hover); }
+  .saran__nama { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .saran__handle { font-size: 14px; color: var(--teks2); }
+  .tombol-ikuti { margin-left: auto; padding: 6px 16px; border: 0; border-radius: 999px; background: var(--teks); color: var(--latar); font-size: 14px; font-weight: 700; cursor: pointer; }
+  .tombol-ikuti.mengikuti { background: none; color: var(--teks); box-shadow: inset 0 0 0 1px var(--teks2); }
+  .kaki { padding: 16px; color: var(--teks2); font-size: 13px; line-height: 1.7; }
+  .kaki a { color: inherit; text-decoration: none; }
+  .kaki a:hover { text-decoration: underline; }
+
+  /* ---------- Navigasi ponsel ---------- */
+  .nav-bawah { display: none; }
+
+  @media (max-width: 1279px) { .rail-kanan { display: none; } }
+  @media (max-width: 1023px) {
+    .rail-kiri { display: none; }
+    .kolom { width: 100%; border: 0; }
+    body { padding-bottom: 60px; }
+    .nav-bawah {
+      display: flex; position: fixed; inset: auto 0 0 0; z-index: 20;
+      align-items: center; justify-content: space-around;
+      padding: 8px 4px; background: var(--latar); border-top: 1px solid var(--garis);
+    }
+    .nav-bawah .nav { font-size: 0; gap: 0; padding: 10px 14px; margin: 0; }
+    .nav-bawah .nav svg { width: 24px; height: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Kumpulan ikon, dipakai ulang lewat <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
+  <symbol id="i-beranda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.8V20h4.5v-5.5h4V20h4.5V9.8"/></symbol>
+  <symbol id="i-cari" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+  <symbol id="i-aktivitas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M18 8.5a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.2 19.5a2 2 0 0 0 3.6 0"/></symbol>
+  <symbol id="i-profil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-3.9 3.4-6 7.5-6s7.5 2.1 7.5 6"/></symbol>
+  <symbol id="i-media" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15.5-4.5-4.5-6 6"/></symbol>
+  <symbol id="i-emoji" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5v.5M15 9.5v.5"/></symbol>
+  <symbol id="i-jadwal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v3.5M16 3v3.5M3.5 10h17"/></symbol>
+  <symbol id="i-utas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-balas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 11.8a7.9 7.9 0 0 1-8 7.7H8.4L3.5 22l1.4-4.4A7.7 7.7 0 0 1 3 11.8 7.9 7.9 0 0 1 11 4h2a7.9 7.9 0 0 1 8 7.8z"/></symbol>
+  <symbol id="i-repost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m17 3 4 4-4 4"/><path d="M3 12V9a2 2 0 0 1 2-2h16"/><path d="m7 21-4-4 4-4"/><path d="M21 12v3a2 2 0 0 1-2 2H3"/></symbol>
+  <symbol id="i-suka" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20.4 4.9 13.3a4.6 4.6 0 0 1 6.5-6.5l.6.6.6-.6a4.6 4.6 0 0 1 6.5 6.5z"/></symbol>
+  <symbol id="i-bagikan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7.5 7.5 4.5-4.5 4.5 4.5"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></symbol>
+  <symbol id="i-titik" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></symbol>
+  <symbol id="i-dokumen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-unduh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10"/><path d="m7.5 10 4.5 4.5 4.5-4.5"/><path d="M4.5 20h15"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.5 14.8A8.5 8.5 0 0 1 9.2 3.5a8.5 8.5 0 1 0 11.3 11.3z"/></symbol>
+  <symbol id="i-lokasi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-tautan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.4 1.4"/><path d="M14 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.4-1.4"/></symbol>
+</svg>
+
+<div class="aplikasi">
+
+  <!-- ---------- Rail kiri ---------- -->
+  <aside class="rail-kiri">
+    <span class="merek" aria-hidden="true"><svg><use href="#i-x"/></svg></span>
+
+    <button class="nav aktif" data-layar="beranda"><svg><use href="#i-beranda"/></svg>Beranda</button>
+    <button class="nav" data-layar="cari"><svg><use href="#i-cari"/></svg>Cari</button>
+    <button class="nav" data-layar="aktivitas"><svg><use href="#i-aktivitas"/></svg>Aktivitas</button>
+    <button class="nav" data-layar="profil"><svg><use href="#i-profil"/></svg>Profil</button>
+
+    <button class="tombol-tulis" data-layar="beranda">Post</button>
+
+    <button class="akun">
+      <span class="avatar avatar--ap">AP</span>
+      <span class="min0">
+        <span class="akun__nama">Andi Pratama</span><br />
+        <span class="akun__handle">@andi</span>
+      </span>
+      <svg width="18" height="18" class="redup"><use href="#i-titik"/></svg>
+    </button>
+
+    <button class="ikon-tema" id="tombol-tema" title="Ganti tema">
+      <svg class="ikon-bulan"><use href="#i-moon"/></svg>
+      <svg class="ikon-matahari"><use href="#i-sun"/></svg>
+    </button>
+  </aside>
+
+  <!-- ---------- Kolom tengah ---------- -->
+  <main class="kolom">
+
+    <!-- Beranda -->
+    <section class="layar aktif" id="beranda">
+      <header class="kepala">
+        <h1 class="kepala__judul">Beranda</h1>
+        <div class="daftar-tab">
+          <button class="tab aktif">Semua</button>
+          <button class="tab">Ikuti</button>
+        </div>
+      </header>
+
+      <div class="tulis">
+        <span class="avatar avatar--ap">AP</span>
+        <div class="min0">
+          <textarea id="tulis" rows="2" placeholder="Apa yang sedang hangat?!"></textarea>
+          <div class="lampiran-daftar" id="pratinjau" hidden></div>
+          <div class="tulis__bawah">
+            <div class="tulis__ikon">
+              <label class="ikon-bulat" title="Lampiran berkas">
+                <svg><use href="#i-media"/></svg>
+                <input id="berkas" type="file" multiple hidden />
+              </label>
+              <span class="ikon-bulat" title="Emoji"><svg><use href="#i-emoji"/></svg></span>
+              <span class="ikon-bulat" title="Jadwalkan"><svg><use href="#i-jadwal"/></svg></span>
+              <span class="ikon-bulat" title="Tambah utas"><svg><use href="#i-utas"/></svg></span>
+            </div>
+            <button class="posting" id="tombol-posting" disabled>Posting</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="daftar-post">
+
+        <!-- Post teks -->
+        <article class="post">
+          <span class="avatar avatar--ap">AP</span>
+          <div class="min0">
+            <div style="display:flex">
+              <div class="post__tajuk min0">
+                <b>Andi Pratama</b>
+                <span class="post__waktu">@andi · 2j</span>
+                <button class="aksi-titik"><svg><use href="#i-titik"/></svg></button>
+              </div>
+            </div>
+            <p class="post__teks">Baru selesai merapikan komponen Livewire pertama untuk proyek <a href="#">#usk</a>. Ternyata validasi bisa langsung menempel di properti, jadi tidak perlu controller terpisah. Lanjut ke <a href="#">#laravel</a> minggu ini. <a href="#">@bunga</a> ikut nimbrung?</p>
+            <div class="post__aksi">
+              <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">4</span></button>
+              <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">12</span></button>
+              <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">38</span></button>
+              <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Post dengan galeri gambar -->
+        <article class="post">
+          <span class="avatar avatar--bl">BL</span>
+          <div class="min0">
+            <div style="display:flex">
+              <div class="post__tajuk min0">
+                <b>Bunga Lestari</b>
+                <span class="post__waktu">@bunga · 5j</span>
+                <button class="aksi-titik"><svg><use href="#i-titik"/></svg></button>
+              </div>
+            </div>
+            <p class="post__teks">Hasil uji coba desain poster mading fakultas untuk <a href="#">#desain</a>. Mana yang paling enak dipandang?</p>
+            <div class="galeri galeri--2">
+              <div class="foto foto--a">poster 1</div>
+              <div class="foto foto--b">poster 2</div>
+              <div class="foto foto--c">poster 3</div>
+              <div class="foto foto--d">poster 4</div>
+            </div>
+            <div class="post__aksi">
+              <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">7</span></button>
+              <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">3</span></button>
+              <button class="aksi aksi-suka disuka"><svg><use href="#i-suka"/></svg><span class="jumlah">24</span></button>
+              <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Post dengan lampiran berkas -->
+        <article class="post">
+          <span class="avatar avatar--cw">CW</span>
+          <div class="min0">
+            <div style="display:flex">
+              <div class="post__tajuk min0">
+                <b>Cakra Wijaya</b>
+                <span class="post__waktu">@cakra · 7j</span>
+                <button class="aksi-titik"><svg><use href="#i-titik"/></svg></button>
+              </div>
+            </div>
+            <p class="post__teks">Panduan format skripsi sudah dirapikan. Silakan unduh dan pakai untuk bimbingan minggu ini, catatan revisinya ada di halaman terakhir. <a href="#">#usk</a></p>
+            <a class="lampiran" href="#" download>
+              <svg class="warna-biru"><use href="#i-dokumen"/></svg>
+              <span class="lampiran__nama">Panduan-Skripsi-USK.pdf</span>
+              <svg class="redup"><use href="#i-unduh"/></svg>
+            </a>
+            <div class="post__aksi">
+              <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">2</span></button>
+              <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">9</span></button>
+              <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">31</span></button>
+              <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Baris repost dengan kutipan -->
+        <div class="repost-leluhur">
+          <svg><use href="#i-repost"/></svg>
+          <span>Direpost oleh Bunga Lestari</span>
+        </div>
+        <article class="post">
+          <span class="avatar avatar--ap">AP</span>
+          <div class="min0">
+            <div style="display:flex">
+              <div class="post__tajuk min0">
+                <b>Andi Pratama</b>
+                <span class="post__waktu">@andi · 9j</span>
+                <button class="aksi-titik"><svg><use href="#i-titik"/></svg></button>
+              </div>
+            </div>
+            <p class="post__teks">Contoh kecil kenapa <a href="#">#livewire</a> bikin form terasa hidup.</p>
+            <div class="kutipan">
+              <div class="kutipan__tajuk">
+                <span class="avatar avatar--kecil avatar--cw">CW</span>
+                <b>Cakra Wijaya</b>
+                <span class="redup">@cakra · 11j</span>
+              </div>
+              <p class="kutipan__teks">Repost suka membantu orang lain menemukan tulisan yang bagus. <a href="#">#laravel</a></p>
+            </div>
+            <div class="post__aksi">
+              <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">1</span></button>
+              <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">5</span></button>
+              <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">17</span></button>
+              <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Cari -->
+    <section class="layar" id="cari">
+      <header class="kepala">
+        <div style="padding:8px 16px">
+          <div class="cari" style="margin:0">
+            <svg><use href="#i-cari"/></svg>
+            <input value="#desain" aria-label="Kata kunci pencarian" />
+          </div>
+        </div>
+        <div class="daftar-tab">
+          <button class="tab aktif">Terbaru</button>
+          <button class="tab">Teratas</button>
+        </div>
+      </header>
+
+      <article class="post">
+        <span class="avatar avatar--bl">BL</span>
+        <div class="min0">
+          <div class="post__tajuk">
+            <b>Bunga Lestari</b>
+            <span class="post__waktu">@bunga · 5j</span>
+          </div>
+          <p class="post__teks">Hasil uji coba desain poster mading fakultas untuk <a href="#">#desain</a>. Mana yang paling enak dipandang?</p>
+          <div class="post__aksi">
+            <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">7</span></button>
+            <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">3</span></button>
+            <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">24</span></button>
+            <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="post">
+        <span class="avatar avatar--dk">DK</span>
+        <div class="min0">
+          <div class="post__tajuk">
+            <b>Dina Kusuma</b>
+            <span class="post__waktu">@dina · 1h</span>
+          </div>
+          <p class="post__teks">Palet warna untuk <a href="#">#desain</a> mading: biru USK dipadukan krem hangat, jangan lebih dari tiga warna.</p>
+          <div class="post__aksi">
+            <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">0</span></button>
+            <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">2</span></button>
+            <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">11</span></button>
+            <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Aktivitas -->
+    <section class="layar" id="aktivitas">
+      <header class="kepala">
+        <h1 class="kepala__judul">Aktivitas</h1>
+        <div class="daftar-tab" data-panel="panel-aktivitas">
+          <button class="tab aktif" data-panel="semua">Semua</button>
+          <button class="tab" data-panel="sebutan">Sebutan</button>
+        </div>
+      </header>
+
+      <div id="panel-aktivitas">
+
+        <div class="panel aktif" data-panel="semua">
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-pink"><svg><use href="#i-suka"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Bunga Lestari</b><span>menyukai post Anda</span><span class="redup">· 12m</span></div>
+              <p class="cuplikan">Baru selesai merapikan komponen Livewire pertama untuk proyek #usk.</p>
+            </div>
+          </a>
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-hijau"><svg><use href="#i-repost"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Cakra Wijaya</b><span>merepost post Anda</span><span class="redup">· 34m</span></div>
+              <p class="cuplikan">Contoh kecil kenapa #livewire bikin form terasa hidup.</p>
+            </div>
+          </a>
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-biru"><svg><use href="#i-balas"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Bunga Lestari</b><span>membalas post Anda</span><span class="redup">· 1j</span></div>
+              <p class="cuplikan">Setuju, validasi di komponen jauh lebih rapi daripada di controller.</p>
+            </div>
+          </a>
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-biru"><svg><use href="#i-profil"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Cakra Wijaya</b><span>mulai mengikuti Anda</span><span class="redup">· 2j</span></div>
+            </div>
+          </a>
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-biru"><svg><use href="#i-balas"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Bunga Lestari</b><span>menyebut Anda</span><span class="redup">· 3j</span></div>
+              <p class="cuplikan">@andi nanti kita review bareng sebelum bimbingan, ya.</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="panel" data-panel="sebutan">
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-biru"><svg><use href="#i-balas"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Bunga Lestari</b><span>menyebut Anda</span><span class="redup">· 3j</span></div>
+              <p class="cuplikan">@andi nanti kita review bareng sebelum bimbingan, ya.</p>
+            </div>
+          </a>
+          <a class="notif" href="#">
+            <span class="notif__ikon warna-biru"><svg><use href="#i-balas"/></svg></span>
+            <div class="min0">
+              <div class="notif__baris"><b>Cakra Wijaya</b><span>menyebut Anda</span><span class="redup">· 6j</span></div>
+              <p class="cuplikan">Format tabel di panduan itu hasil diskusi dengan @andi.</p>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Profil -->
+    <section class="layar" id="profil">
+      <header class="kepala">
+        <h1 class="kepala__judul">Andi Pratama <span class="redup" style="font-weight:400;font-size:15px">12 post</span></h1>
+      </header>
+
+      <div class="banner"></div>
+      <div class="profil__info">
+        <div class="profil__baris">
+          <span class="profil__avatar">AP</span>
+          <button class="tombol-garis">Edit profil</button>
+        </div>
+        <h2 class="profil__nama">Andi Pratama</h2>
+        <div class="profil__handle">@andi</div>
+        <p class="profil__bio">Mahasiswa informatika USK. Menulis soal Laravel, Livewire, dan hal-hal kecil yang bikin kode lebih rapi.</p>
+        <div class="profil__meta">
+          <span style="display:flex;align-items:center;gap:4px"><svg><use href="#i-lokasi"/></svg>Banda Aceh</span>
+          <span style="display:flex;align-items:center;gap:4px"><svg><use href="#i-tautan"/></svg><a href="#" class="warna-biru" style="text-decoration:none">tweetusk.test</a></span>
+          <span style="display:flex;align-items:center;gap:4px"><svg><use href="#i-jadwal"/></svg>Bergabung November 2026</span>
+        </div>
+        <div class="statistik">
+          <span><b>24</b> Mengikuti</span>
+          <span><b>118</b> Pengikut</span>
+        </div>
+      </div>
+
+      <div class="daftar-tab">
+        <button class="tab aktif">Postingan</button>
+        <button class="tab">Balasan</button>
+        <button class="tab">Media</button>
+        <button class="tab">Suka</button>
+      </div>
+
+      <article class="post">
+        <span class="avatar avatar--ap">AP</span>
+        <div class="min0">
+          <div class="post__tajuk">
+            <b>Andi Pratama</b>
+            <span class="post__waktu">@andi · 2j</span>
+          </div>
+          <p class="post__teks">Baru selesai merapikan komponen Livewire pertama untuk proyek <a href="#">#usk</a>. Ternyata validasi bisa langsung menempel di properti, jadi tidak perlu controller terpisah.</p>
+          <div class="post__aksi">
+            <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">4</span></button>
+            <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">12</span></button>
+            <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">38</span></button>
+            <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="post">
+        <span class="avatar avatar--ap">AP</span>
+        <div class="min0">
+          <div class="post__tajuk">
+            <b>Andi Pratama</b>
+            <span class="post__waktu">@andi · 9j</span>
+          </div>
+          <p class="post__teks">Contoh kecil kenapa <a href="#">#livewire</a> bikin form terasa hidup.</p>
+          <div class="kutipan">
+            <div class="kutipan__tajuk">
+              <span class="avatar avatar--kecil avatar--cw">CW</span>
+              <b>Cakra Wijaya</b>
+              <span class="redup">@cakra · 11j</span>
+            </div>
+            <p class="kutipan__teks">Repost suka membantu orang lain menemukan tulisan yang bagus. <a href="#">#laravel</a></p>
+          </div>
+          <div class="post__aksi">
+            <button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">1</span></button>
+            <button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">5</span></button>
+            <button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">17</span></button>
+            <button class="aksi"><svg><use href="#i-bagikan"/></svg></button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ---------- Rail kanan ---------- -->
+  <aside class="rail-kanan">
+    <div class="cari">
+      <svg><use href="#i-cari"/></svg>
+      <input placeholder="Cari" aria-label="Cari" />
+    </div>
+
+    <div class="kartu">
+      <h2 class="kartu__judul">Tren untuk Anda</h2>
+      <a class="tren" href="#">
+        <div class="tren__label">Tren</div>
+        <div class="tren__tag">#desain</div>
+        <div class="tren__jumlah">4 post</div>
+      </a>
+      <a class="tren" href="#">
+        <div class="tren__label">Tren</div>
+        <div class="tren__tag">#usk</div>
+        <div class="tren__jumlah">4 post</div>
+      </a>
+      <a class="tren" href="#">
+        <div class="tren__label">Tren</div>
+        <div class="tren__tag">#laravel</div>
+        <div class="tren__jumlah">3 post</div>
+      </a>
+      <a class="tren" href="#">
+        <div class="tren__label">Tren</div>
+        <div class="tren__tag">#livewire</div>
+        <div class="tren__jumlah">3 post</div>
+      </a>
+    </div>
+
+    <div class="kartu">
+      <h2 class="kartu__judul">Siapa untuk diikuti</h2>
+      <div class="saran">
+        <span class="avatar avatar--bl">BL</span>
+        <span class="min0">
+          <span class="saran__nama">Bunga Lestari</span><br />
+          <span class="saran__handle">@bunga</span>
+        </span>
+        <button class="tombol-ikuti">Ikuti</button>
+      </div>
+      <div class="saran">
+        <span class="avatar avatar--cw">CW</span>
+        <span class="min0">
+          <span class="saran__nama">Cakra Wijaya</span><br />
+          <span class="saran__handle">@cakra</span>
+        </span>
+        <button class="tombol-ikuti">Ikuti</button>
+      </div>
+      <div class="saran">
+        <span class="avatar avatar--dk">DK</span>
+        <span class="min0">
+          <span class="saran__nama">Dina Kusuma</span><br />
+          <span class="saran__handle">@dina</span>
+        </span>
+        <button class="tombol-ikuti">Ikuti</button>
+      </div>
+    </div>
+
+    <div class="kaki">
+      <a href="#">Ketentuan</a> · <a href="#">Privasi</a> · <a href="#">Cookie</a> · <a href="#">Aksesibilitas</a><br />
+      © 2026 tweetUSK
+    </div>
+  </aside>
+
+</div>
+
+<!-- ---------- Navigasi bawah (ponsel) ---------- -->
+<nav class="nav-bawah">
+  <button class="nav aktif" data-layar="beranda"><svg><use href="#i-beranda"/></svg>Beranda</button>
+  <button class="nav" data-layar="cari"><svg><use href="#i-cari"/></svg>Cari</button>
+  <button class="nav" data-layar="aktivitas"><svg><use href="#i-aktivitas"/></svg>Aktivitas</button>
+  <button class="nav" data-layar="profil"><svg><use href="#i-profil"/></svg>Profil</button>
+</nav>
+
+<script>
+  const ambil = (pilih, akar = document) => akar.querySelector(pilih);
+  const ambilSemua = (pilih, akar = document) => [...akar.querySelectorAll(pilih)];
+
+  // Pindah layar: Beranda, Cari, Aktivitas, Profil.
+  ambilSemua('[data-layar]').forEach((tombol) => {
+    tombol.addEventListener('click', () => {
+      const tujuan = tombol.dataset.layar;
+      ambilSemua('.layar').forEach((layar) => layar.classList.toggle('aktif', layar.id === tujuan));
+      ambilSemua('.nav[data-layar]').forEach((nav) => nav.classList.toggle('aktif', nav.dataset.layar === tujuan));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Tab dengan panel: dipakai halaman Aktivitas.
+  ambilSemua('.daftar-tab[data-panel]').forEach((grup) => {
+    ambilSemua('.tab', grup).forEach((tab) => {
+      tab.addEventListener('click', () => {
+        ambilSemua('.tab', grup).forEach((lain) => lain.classList.toggle('aktif', lain === tab));
+        ambilSemua('#' + grup.dataset.panel + ' > .panel').forEach((panel) => {
+          panel.classList.toggle('aktif', panel.dataset.panel === tab.dataset.panel);
+        });
+      });
+    });
+  });
+
+  // Tab tanpa panel: Semua/Ikuti dan Terbaru/Teratas cukup berganti penanda.
+  ambilSemua('.daftar-tab:not([data-panel])').forEach((grup) => {
+    ambilSemua('.tab', grup).forEach((tab) => {
+      tab.addEventListener('click', () => ambilSemua('.tab', grup).forEach((lain) => lain.classList.toggle('aktif', lain === tab)));
+    });
+  });
+
+  // Suka sebagai sakelar, seperti di aplikasi aslinya.
+  ambilSemua('.aksi-suka').forEach((tombol) => {
+    tombol.addEventListener('click', () => {
+      tombol.classList.toggle('disuka');
+      const angka = ambil('.jumlah', tombol);
+      if (angka) angka.textContent = Number(angka.textContent) + (tombol.classList.contains('disuka') ? 1 : -1);
+    });
+  });
+
+  // Tombol ikuti berganti label saat ditekan.
+  ambilSemua('.tombol-ikuti').forEach((tombol) => {
+    tombol.addEventListener('click', () => {
+      tombol.classList.toggle('mengikuti');
+      tombol.textContent = tombol.classList.contains('mengikuti') ? 'Mengikuti' : 'Ikuti';
+    });
+  });
+
+  // Tema terang dan gelap mengikuti variabel CSS.
+  ambil('#tombol-tema').addEventListener('click', () => document.documentElement.classList.toggle('gelap'));
+
+  // Kotak tulis: lampiran ditampilkan sebagai chip, Posting baru aktif bila ada isi.
+  const isian = ambil('#tulis');
+  const tombolPosting = ambil('#tombol-posting');
+  const pratinjau = ambil('#pratinjau');
+  const pemilihBerkas = ambil('#berkas');
+
+  const perbaruiTombol = () => {
+    tombolPosting.disabled = isian.value.trim() === '' && pratinjau.children.length === 0;
+  };
+
+  isian.addEventListener('input', perbaruiTombol);
+
+  pemilihBerkas.addEventListener('change', () => {
+    pratinjau.innerHTML = '';
+    [...pemilihBerkas.files].forEach((berkas) => {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = berkas.name;
+      pratinjau.append(chip);
+    });
+    pratinjau.hidden = pratinjau.children.length === 0;
+    perbaruiTombol();
+  });
+
+  tombolPosting.addEventListener('click', () => {
+    const isi = isian.value.trim();
+    const namaBerkas = [...pemilihBerkas.files].map((berkas) => berkas.name);
+    if (isi === '' && namaBerkas.length === 0) return;
+
+    const kartu = document.createElement('article');
+    kartu.className = 'post';
+    kartu.innerHTML = '<span class="avatar avatar--ap">AP</span><div class="min0">'
+      + '<div class="post__tajuk"><b>Andi Pratama</b><span class="post__waktu">@andi · sekarang</span></div>'
+      + '<p class="post__teks"></p><div class="lampiran-daftar"></div>'
+      + '<div class="post__aksi">'
+      + '<button class="aksi"><svg><use href="#i-balas"/></svg><span class="jumlah">0</span></button>'
+      + '<button class="aksi"><svg><use href="#i-repost"/></svg><span class="jumlah">0</span></button>'
+      + '<button class="aksi aksi-suka"><svg><use href="#i-suka"/></svg><span class="jumlah">0</span></button>'
+      + '<button class="aksi"><svg><use href="#i-bagikan"/></svg></button>'
+      + '</div></div>';
+
+    kartu.querySelector('.post__teks').textContent = isi;
+    const wadahChip = kartu.querySelector('.lampiran-daftar');
+    namaBerkas.forEach((nama) => {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = nama;
+      wadahChip.append(chip);
+    });
+
+    const tombolSuka = kartu.querySelector('.aksi-suka');
+    tombolSuka.addEventListener('click', () => {
+      tombolSuka.classList.toggle('disuka');
+      const angka = tombolSuka.querySelector('.jumlah');
+      angka.textContent = Number(angka.textContent) + (tombolSuka.classList.contains('disuka') ? 1 : -1);
+    });
+
+    ambil('#daftar-post').prepend(kartu);
+
+    isian.value = '';
+    pemilihBerkas.value = '';
+    pratinjau.innerHTML = '';
+    pratinjau.hidden = true;
+    perbaruiTombol();
+  });
+</script>
+</body>
+</html>

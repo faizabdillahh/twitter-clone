@@ -17,7 +17,7 @@ use Livewire\WithFileUploads;
 /**
  * Kotak penulisan post di bagian atas feed.
  *
- * Batas 250 karakter memakai grapheme, jadi emoji dihitung satu karakter.
+ * Mendukung unggah gambar dan berkas secara terpisah dengan batas 250 karakter.
  */
 #[Layout('components.layouts.app')]
 class Composer extends Component
@@ -25,24 +25,56 @@ class Composer extends Component
     // Aturan body dan penghitung panjang dipakai bersama EditPost nanti.
     use ValidatesPostInput;
 
-    // Menyediakan properti media dan pembersihan berkas sementara.
+    // Menyediakan fitur unggah berkas dan pengelolaan berkas sementara.
     use WithFileUploads;
 
     /**
-     * Ekstensi lampiran yang diterima, dipakai validasi dan saringan pratinjau.
+     * Ekstensi berkas gambar yang diterima sistem.
+     *
+     * @var list<string>
+     */
+    private const EKSTENSI_GAMBAR = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+    /**
+     * Ekstensi dokumen dan berkas arsip yang diterima sistem.
+     *
+     * @var list<string>
+     */
+    private const EKSTENSI_BERKAS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip'];
+
+    /**
+     * Seluruh ekstensi lampiran yang diizinkan sistem.
      *
      * @var list<string>
      */
     private const EKSTENSI_LAMPIRAN = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip'];
 
     /**
-     * Lampiran yang dipilih tetapi belum dikirim.
+     * Berkas gambar yang dipilih pengguna melalui input gambar.
+     *
+     * @var array<int, TemporaryUploadedFile>
+     */
+    public array $gambar = [];
+
+    /**
+     * Berkas dokumen atau arsip yang dipilih melalui input berkas.
+     *
+     * @var array<int, TemporaryUploadedFile>
+     */
+    public array $berkas = [];
+
+    /**
+     * Lampiran gabungan (dipertahankan untuk kompatibilitas uji).
      *
      * @var array<int, TemporaryUploadedFile>
      */
     public array $media = [];
 
     public bool $merantai = false; // True bila kiriman berikutnya menyambung thread.
+
+    public bool $merantaiOtomatis = true; // False untuk dialog: tiap kiriman berdiri sendiri.
+
+    public bool $fokusOtomatis = false; // True untuk dialog supaya kursor siap di textarea.
 
     /**
      * Menyiapkan mode tulis: tweet biasa, balasan, atau kutipan.
@@ -57,6 +89,17 @@ class Composer extends Component
     }
 
     /**
+     * Mengumpulkan seluruh lampiran dari gambar, dokumen, dan properti media.
+     *
+     * @return array<int, TemporaryUploadedFile>
+     */
+    public function semuaBerkas(): array
+    {
+        // Satukan ketiga sumber berkas ke dalam satu array tanpa celah indeks.
+        return array_values(array_merge($this->media, $this->gambar, $this->berkas));
+    }
+
+    /**
      * Memvalidasi isi lalu menyerahkan penyimpanan ke PostWriter.
      */
     public function kirim(PostWriter $penulis): void
@@ -64,8 +107,20 @@ class Composer extends Component
         // Spasi di ujung tidak dihitung sebagai isi.
         $this->body = trim($this->body);
 
-        // Aturan body ditambah aturan khusus lampiran.
+        // Ambil seluruh lampiran aktif.
+        $lampiran = $this->semuaBerkas();
+
+        // Aturan body ditambah aturan khusus gambar dan berkas.
         $this->validate($this->aturanPost());
+
+        // Batasi total akumulasi berkas maksimal 4 lampiran.
+        if (count($lampiran) > 4) {
+            // Berikan pesan galat bila total berkas melebihi kuota.
+            $this->addError('media', 'Maksimal 4 lampiran per postingan.');
+
+            // Batalkan pengiriman kiriman.
+            return;
+        }
 
         // Panjang dihitung per grapheme setelah validasi dasar lolos.
         $this->pastikanPanjangBody();
@@ -74,7 +129,7 @@ class Composer extends Component
         $this->pastikanKombinasi();
 
         // Post tanpa teks dan tanpa lampiran tidak bermakna.
-        if ($this->body === '' && $this->media === []) {
+        if ($this->body === '' && $lampiran === []) {
             // Pesan ditaruh di body supaya muncul di bawah kotak tulis.
             $this->addError('body', 'Tulis sesuatu atau lampirkan berkas.');
 
@@ -96,13 +151,14 @@ class Composer extends Component
             'type' => $this->jenis(),
             'parent_id' => $this->parent?->id,
             'body' => $this->body === '' ? null : $this->body,
-        ], $this->media);
+        ], $lampiran);
 
         // Formulir dikosongkan supaya siap dipakai lagi.
-        $this->reset('body', 'media');
+        $this->reset('body', 'media', 'gambar', 'berkas');
 
         // Kutipan menjadi post baru di feed, jadi pengguna dibawa ke sana.
         if ($this->jenis() === PostType::Quote) {
+            // Arahkan ke beranda setelah mengutip post.
             $this->redirect(route('home'), navigate: true);
 
             // Tidak perlu memuat ulang halaman thread yang sedang ditinggalkan.
@@ -110,7 +166,7 @@ class Composer extends Component
         }
 
         // Rantai hanya berlanjut untuk post yang baru dibuat dari mode tweet atau rantai berjalan.
-        if ($this->merantai || $post->type === PostType::Tweet) {
+        if ($this->merantaiOtomatis && ($this->merantai || $post->type === PostType::Tweet)) {
             // Kiriman berikutnya menyambung sebagai balasan ke post yang baru dibuat.
             $this->parent = $post;
             // Mode berganti ke balasan supaya aturan kombinasi tetap sah.
@@ -118,21 +174,63 @@ class Composer extends Component
             // Penanda di view menyala selama rantai berlangsung.
             $this->merantai = true;
         }
-        // Balasan di halaman utas tetap membalas post yang sama, seperti di X.
 
         // Feed dan daftar balasan mendengarkan event ini untuk memuat ulang.
         $this->dispatch('post-created', postId: $post->id);
     }
 
     /**
-     * Menyaring lampiran yang tidak memenuhi aturan berkas.
+     * Menyaring unggahan gambar yang tidak sesuai format atau batas ukuran.
+     */
+    public function updatedGambar(): void
+    {
+        // Periksa setiap berkas gambar yang dipilih.
+        foreach ($this->gambar as $indeks => $satu) {
+            // Ekstensi harus termasuk kategori gambar yang diizinkan dan maksimal 5 MB.
+            if (! in_array(strtolower($satu->getClientOriginalExtension()), self::EKSTENSI_GAMBAR, true) || $satu->getSize() > 5 * 1024 * 1024) {
+                // Buang gambar yang tidak lolos filter.
+                unset($this->gambar[$indeks]);
+
+                // Pasang pesan galat untuk input gambar.
+                $this->addError('gambar', 'Gambar harus berformat JPG, PNG, WEBP, atau GIF maksimal 5 MB.');
+            }
+        }
+
+        // Rapikan kembali indeks array gambar.
+        $this->gambar = array_values($this->gambar);
+    }
+
+    /**
+     * Menyaring unggahan dokumen yang tidak sesuai format atau batas ukuran.
+     */
+    public function updatedBerkas(): void
+    {
+        // Periksa setiap berkas dokumen yang dipilih.
+        foreach ($this->berkas as $indeks => $satu) {
+            // Ekstensi harus termasuk kategori berkas dokumen/arsip dan maksimal 5 MB.
+            if (! in_array(strtolower($satu->getClientOriginalExtension()), self::EKSTENSI_BERKAS, true) || $satu->getSize() > 5 * 1024 * 1024) {
+                // Buang berkas yang tidak lolos filter.
+                unset($this->berkas[$indeks]);
+
+                // Pasang pesan galat untuk input berkas.
+                $this->addError('berkas', 'Berkas harus berupa dokumen atau arsip maksimal 5 MB.');
+            }
+        }
+
+        // Rapikan kembali indeks array berkas.
+        $this->berkas = array_values($this->berkas);
+    }
+
+    /**
+     * Menyaring lampiran media umum untuk kompatibilitas pengujian.
      */
     public function updatedMedia(): void
     {
         // Lampiran harus bertipe dikenal dan tidak lebih dari 5 MB.
-        foreach ($this->media as $indeks => $berkas) {
+        foreach ($this->media as $indeks => $satu) {
             // Berkas bertipe asing atau kelebihan ukuran langsung dibuang.
-            if (! in_array(strtolower($berkas->getClientOriginalExtension()), self::EKSTENSI_LAMPIRAN, true) || $berkas->getSize() > 5 * 1024 * 1024) {
+            if (! in_array(strtolower($satu->getClientOriginalExtension()), self::EKSTENSI_LAMPIRAN, true) || $satu->getSize() > 5 * 1024 * 1024) {
+                // Buang berkas yang tidak lolos aturan.
                 unset($this->media[$indeks]);
 
                 // Satu pesan untuk semua lampiran yang gugur.
@@ -142,6 +240,30 @@ class Composer extends Component
 
         // Indeks dinomori ulang agar tombol buang menunjuk lampiran yang benar.
         $this->media = array_values($this->media);
+    }
+
+    /**
+     * Membuang satu gambar dari pratinjau sebelum dikirim.
+     */
+    public function hapusGambar(int $indeks): void
+    {
+        // Hapus elemen array pada indeks target.
+        unset($this->gambar[$indeks]);
+
+        // Urutkan ulang indeks array gambar.
+        $this->gambar = array_values($this->gambar);
+    }
+
+    /**
+     * Membuang satu berkas dokumen dari pratinjau sebelum dikirim.
+     */
+    public function hapusBerkas(int $indeks): void
+    {
+        // Hapus elemen array pada indeks target.
+        unset($this->berkas[$indeks]);
+
+        // Urutkan ulang indeks array berkas.
+        $this->berkas = array_values($this->berkas);
     }
 
     /**
@@ -176,8 +298,12 @@ class Composer extends Component
      */
     private function aturanPost(): array
     {
+        // Validasi body digabung dengan validasi ketiga properti berkas.
         return array_merge($this->aturanBody(), [
-            // Empat lampiran per post, masing-masing maksimal 5 MB.
+            'gambar' => ['array', 'max:4'],
+            'gambar.*' => ['file', 'mimes:'.implode(',', self::EKSTENSI_GAMBAR), 'max:5120'],
+            'berkas' => ['array', 'max:4'],
+            'berkas.*' => ['file', 'mimes:'.implode(',', self::EKSTENSI_BERKAS), 'max:5120'],
             'media' => ['array', 'max:4'],
             'media.*' => ['file', 'mimes:'.implode(',', self::EKSTENSI_LAMPIRAN), 'max:5120'],
         ]);
@@ -188,6 +314,7 @@ class Composer extends Component
      */
     public function render(): View
     {
+        // Render view blade untuk formulir composer.
         return view('livewire.composer');
     }
 }

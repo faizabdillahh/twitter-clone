@@ -64,13 +64,23 @@
 
                         {{-- Menu Notifikasi / Aktivitas. --}}
                         <a href="{{ route('activities') }}" wire:navigate class="group flex items-center gap-5 rounded-full p-3 transition-colors hover:bg-black/[0.05] xl:px-4 xl:py-3 dark:hover:bg-white/[0.1]">
-                            {{-- Ikon lonceng notifikasi X. --}}
+                            {{-- Ikon lonceng: terisi saat aktif, bergaris saat nonaktif. --}}
                             <div class="size-7 shrink-0">
-                                {{-- Vektor lonceng notifikasi. --}}
-                                <svg viewBox="0 0 24 24" aria-hidden="true" class="size-7 fill-current">
-                                    {{-- Jalur lonceng notifikasi. --}}
-                                    <path d="M21.996 16.59c0 .5-.22 1-.6 1.3l-.9.71H3.5l-.9-.71c-.38-.3-.6-.8-.6-1.3 0-1.8 1-3.6 2.6-4.6l.4-.3V9c0-4.4 3.6-8 8-8s8 3.6 8 8v2.69l.4.3c1.6 1 2.6 2.8 2.6 4.6zm-8 4.41c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path>
-                                </svg>
+                                @if (request()->routeIs('activities'))
+                                    {{-- Ikon lonceng versi aktif. --}}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-7 fill-current">
+                                        {{-- Jalur lonceng terisi. --}}
+                                        <path d="M21.996 16.59c0 .5-.22 1-.6 1.3l-.9.71H3.5l-.9-.71c-.38-.3-.6-.8-.6-1.3 0-1.8 1-3.6 2.6-4.6l.4-.3V9c0-4.4 3.6-8 8-8s8 3.6 8 8v2.69l.4.3c1.6 1 2.6 2.8 2.6 4.6zm-8 4.41c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path>
+                                    </svg>
+                                @else
+                                    {{-- Ikon lonceng versi nonaktif: badan bergaris, pemukul tetap terisi. --}}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-7 stroke-current" fill="currentColor" stroke-width="2" stroke-linejoin="round">
+                                        {{-- Badan lonceng yang hanya digariskan. --}}
+                                        <path d="M21.996 16.59c0 .5-.22 1-.6 1.3l-.9.71H3.5l-.9-.71c-.38-.3-.6-.8-.6-1.3 0-1.8 1-3.6 2.6-4.6l.4-.3V9c0-4.4 3.6-8 8-8s8 3.6 8 8v2.69l.4.3c1.6 1 2.6 2.8 2.6 4.6z" fill="none"></path>
+                                        {{-- Pemukul lonceng di bawah, tetap terisi penuh. --}}
+                                        <path d="M13.996 21c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"></path>
+                                    </svg>
+                                @endif
                             </div>
                             {{-- Label teks Aktivitas. --}}
                             <span class="hidden text-xl xl:inline {{ request()->routeIs('activities') ? 'font-bold' : 'font-normal' }}">Aktivitas</span>
@@ -91,10 +101,10 @@
                         </a>
                     </nav>
 
-                    {{-- Tombol Post biru khas X di layar lebar. --}}
-                    <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click="$dispatch('buka-tulis')" class="mt-4 hidden h-[52px] w-[90%] items-center justify-center rounded-full !bg-[#1d9bf0] text-[17px] font-bold text-white shadow-none transition-colors hover:!bg-[#1a8cd8] xl:flex">Post</flux:button>
+                    {{-- Tombol Post selebar rel, sama seperti tombol Post x.com. --}}
+                    <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click.prevent="$flux.modal('tulis').show()" class="mt-4 hidden h-[52px] w-full items-center justify-center rounded-full !bg-[#1d9bf0] text-[17px] font-bold text-white shadow-none transition-colors hover:!bg-[#1a8cd8] xl:flex">Post</flux:button>
                     {{-- Tombol Post bulat kompak untuk layar tablet. --}}
-                    <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click="$dispatch('buka-tulis')" class="mt-4 flex size-[50px] items-center justify-center rounded-full !bg-[#1d9bf0] text-white shadow-none transition-colors hover:!bg-[#1a8cd8] xl:hidden">
+                    <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click.prevent="$flux.modal('tulis').show()" class="mt-4 flex size-[50px] items-center justify-center rounded-full !bg-[#1d9bf0] text-white shadow-none transition-colors hover:!bg-[#1a8cd8] xl:hidden">
                         {{-- Ikon bulu tulis tweet resmi X. --}}
                         <svg viewBox="0 0 24 24" aria-hidden="true" class="size-6 fill-current">
                             {{-- Jalur bulu pena. --}}
@@ -247,7 +257,7 @@
         </nav>
 
         {{-- Tombol aksi melayang (FAB) di kanan bawah ponsel. --}}
-        <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click="$dispatch('buka-tulis')" class="fixed right-4 bottom-18 z-40 flex size-14 items-center justify-center rounded-full !bg-[#1d9bf0] text-white shadow-lg transition-transform active:scale-95 sm:hidden hover:!bg-[#1a8cd8]" aria-label="Tulis post baru">
+        <flux:button variant="primary" :href="route('home').'#tulis'" x-on:click.prevent="$flux.modal('tulis').show()" class="fixed right-4 bottom-18 z-40 flex size-14 items-center justify-center rounded-full !bg-[#1d9bf0] text-white shadow-lg transition-transform active:scale-95 sm:hidden hover:!bg-[#1a8cd8]" aria-label="Tulis post baru">
             {{-- Ikon bulu tulis tweet resmi. --}}
             <svg viewBox="0 0 24 24" aria-hidden="true" class="size-6 fill-current">
                 {{-- Jalur bulu pena. --}}
@@ -257,6 +267,27 @@
 
         {{-- Pemberitahuan singkat di bawah layar, dipakai aksi salin tautan. --}}
         <flux:toast />
+
+        {{-- Dialog tulis ala x.com, dibuka dari tombol Post rail kiri dan tombol melayang ponsel. --}}
+        {{-- Dialog menutup sendiri lewat event post-created. --}}
+        {{-- closable dimatikan karena tombol tutup sudah ada di header dialog. --}}
+        {{-- Buka dan tutup memakai API Flux: $flux.modal('tulis'), bukan event open-modal. --}}
+        <flux:modal name="tulis" :closable="false" class="w-full max-w-[600px] overflow-hidden !rounded-2xl !p-0 [&>div:last-child]:border-b-0 dark:!bg-black" x-on:post-created.window="$flux.modal('tulis').close()">
+            {{-- Header dialog 53px berisi tombol tutup, sama seperti dialog tulis x.com. --}}
+            <div class="flex h-[53px] items-center border-b border-zinc-200 px-4 dark:border-[#2f3336]">
+                {{-- Tombol penutup dialog; elemen flux:modal.close tidak hidup di Flux 2.21. --}}
+                {{-- Tombol bulat berikon silang. --}}
+                <button type="button" x-on:click="$flux.modal('tulis').close()" class="-ml-2 flex size-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.05] dark:hover:bg-white/[0.1]" aria-label="Tutup">
+                    {{-- Ikon silang penutup. --}}
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 fill-current">
+                        {{-- Jalur silang. --}}
+                        <path d="M13.414 12l5.793-5.793c.39-.39.39-1.023 0-1.414s-1.023-.39-1.414 0L12 10.586 6.207 4.793c-.39-.39-1.023-.39-1.414 0s-.39 1.023 0 1.414L10.586 12l-5.793 5.793c-.39.39-.39 1.023 0 1.414.195.195.45.293.707.293s.512-.098.707-.293L12 13.414l5.793 5.793c.195.195.45.293.707.293s.512-.098.707-.293c.39-.39.39-1.023 0-1.414L13.414 12z"></path>
+                    </svg>
+                </button>
+            </div>
+            {{-- Kotak tulis yang sama dengan beranda, tetapi tanpa rantai otomatis dan langsung fokus. --}}
+            <livewire:composer :merantai-otomatis="false" :fokus-otomatis="true" />
+        </flux:modal>
 
         {{-- Skrip JavaScript Flux bawaan. --}}
         @fluxScripts

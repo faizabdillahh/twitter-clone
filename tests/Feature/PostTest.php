@@ -533,4 +533,81 @@ class PostTest extends TestCase
 
         $this->assertSame(30, Post::count());
     }
+
+    public function test_uploading_image_and_document_separately(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs(User::factory()->create());
+
+        // Unggah gambar melalui input gambar dan dokumen melalui input berkas secara terpisah.
+        Livewire::test(Composer::class)
+            ->set('body', 'Post dengan gambar dan dokumen terpisah')
+            ->set('gambar', [UploadedFile::fake()->image('foto.png', 400, 300)])
+            ->set('berkas', [UploadedFile::fake()->create('laporan.pdf', 100, 'application/pdf')])
+            ->call('kirim')
+            ->assertHasNoErrors();
+
+        $post = Post::firstOrFail();
+        $this->assertCount(2, $post->media);
+
+        // Media pertama bertipe gambar, media kedua berupa dokumen.
+        $foto = $post->media->first();
+        $dokumen = $post->media->last();
+
+        $this->assertTrue($foto->isImage());
+        $this->assertFalse($dokumen->isImage());
+        $this->assertSame('laporan.pdf', $dokumen->name);
+
+        Storage::disk('public')->assertExists($foto->path);
+        Storage::disk('public')->assertExists($dokumen->path);
+    }
+
+    public function test_dropping_pending_image_and_document(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs(User::factory()->create());
+
+        // Batalkan gambar dari antrean gambar dan dokumen dari antrean berkas.
+        Livewire::test(Composer::class)
+            ->set('gambar', [
+                UploadedFile::fake()->image('satu.jpg', 400, 300),
+                UploadedFile::fake()->image('dua.jpg', 400, 300),
+            ])
+            ->set('berkas', [
+                UploadedFile::fake()->create('dokumen1.pdf', 100),
+                UploadedFile::fake()->create('dokumen2.docx', 100),
+            ])
+            ->call('hapusGambar', 0)
+            ->assertCount('gambar', 1)
+            ->call('hapusBerkas', 0)
+            ->assertCount('berkas', 1);
+    }
+
+    public function test_non_image_rejected_in_image_input(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs(User::factory()->create());
+
+        // Input gambar menolak berkas non-gambar seperti berkas PDF.
+        Livewire::test(Composer::class)
+            ->set('gambar', [UploadedFile::fake()->create('dokumen.pdf', 100)])
+            ->assertHasErrors('gambar')
+            ->assertCount('gambar', 0);
+    }
+
+    public function test_unknown_document_rejected_in_document_input(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs(User::factory()->create());
+
+        // Input berkas menolak berkas asing seperti berkas eksekusi.
+        Livewire::test(Composer::class)
+            ->set('berkas', [UploadedFile::fake()->create('program.exe', 100)])
+            ->assertHasErrors('berkas')
+            ->assertCount('berkas', 0);
+    }
 }
